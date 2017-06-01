@@ -15,7 +15,8 @@ public:
                    const std::string &returnType,
                    const std::vector<Argument> &arguments);
 
-  std::string generateCode() override;
+  std::vector<std::string> generateAdvices() override;
+  std::vector<std::string> generatePointcuts() override;
 };
 }
 

@@ -9,9 +9,9 @@
 namespace ag {
 
 AspectParser::AspectParser(const std::string &pathname) : _pathname(pathname) {
-  auto result = _aspect.load_file(pathname.c_str());
+  auto result = _aspect.load_file(_pathname.c_str());
   if (!result) {
-    std::cout << "XML " << pathname
+    std::cout << "XML " << _pathname
               << " parsing error\n  Description: " << result.description()
               << '\n';
   }

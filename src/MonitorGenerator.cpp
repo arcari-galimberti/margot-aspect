@@ -12,7 +12,7 @@ ag::MonitorGenerator::MonitorGenerator(
     const std::vector<ag::Argument> &arguments)
     : AdviceGenerator(functionName, returnType, arguments) {}
 
-std::string ag::MonitorGenerator::generateCode() {
+std::vector<std::string> ag::MonitorGenerator::generateAdvices() {
   auto argZeroName = _arguments.front().name();
   auto argZeroType = _arguments.front().type();
 
@@ -30,5 +30,8 @@ std::string ag::MonitorGenerator::generateCode() {
   std::cout << "\tmargot::foo::stop_monitor();\n";
   std::cout << "\tmargot::foo::log();\n";
   std::cout << "}\n\n";
+}
+std::vector<std::string> MonitorGenerator::generatePointcuts() {
+  return nullptr;
 }
 }

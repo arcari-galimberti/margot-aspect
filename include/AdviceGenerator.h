@@ -27,7 +27,8 @@ public:
   AdviceGenerator(const std::string &functionName,
                   const std::string &returnType,
                   const std::vector<Argument> &arguments);
-  virtual std::string generateCode() = 0;
+  virtual std::vector<std::string> generateAdvices() = 0;
+  virtual std::vector<std::string> generatePointcuts() = 0;
 
 protected:
   std::string _functionName;
