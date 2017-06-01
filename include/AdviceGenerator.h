@@ -10,31 +10,30 @@
 
 namespace ag {
 
-    class Argument {
-    public:
-        Argument(const std::string &type, const std::string &name);
+class Argument {
+public:
+  Argument(const std::string &type, const std::string &name);
 
-        friend class AdviceGenerator;
+  const inline std::string &type() const { return _type; }
+  const inline std::string &name() const { return _name; }
 
-    private:
-        std::string type;
-        std::string name;
-    };
+private:
+  std::string _type;
+  std::string _name;
+};
 
-    class AdviceGenerator {
-    public:
-        AdviceGenerator(const std::string &functionName, const std::string &returnType,
-                        const std::vector<Argument> &arguments);
-        virtual std::string generateCode()=0;
+class AdviceGenerator {
+public:
+  AdviceGenerator(const std::string &functionName,
+                  const std::string &returnType,
+                  const std::vector<Argument> &arguments);
+  virtual std::string generateCode() = 0;
 
-    protected:
-        std::string functionName;
-        std::string returnType;
-        std::vector<Argument> arguments;
-
-    };
-
-
+protected:
+  std::string functionName;
+  std::string returnType;
+  std::vector<Argument> arguments;
+};
 }
 
-#endif //ASPECT_PROJECT_ADVICEGENERATOR_H
+#endif // ASPECT_PROJECT_ADVICEGENERATOR_H

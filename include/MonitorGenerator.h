@@ -9,14 +9,14 @@
 
 namespace ag {
 
-    class MonitorGenerator : public AdviceGenerator {
-    public:
-        MonitorGenerator(const std::string &functionName, const std::string &returnType,
-                         const std::vector<Argument> &arguments);
+class MonitorGenerator : public AdviceGenerator {
+public:
+  MonitorGenerator(const std::string &functionName,
+                   const std::string &returnType,
+                   const std::vector<Argument> &arguments);
 
-        std::string generateCode() override;
-    };
-
+  std::string generateCode() override;
+};
 }
 
-#endif //ASPECT_PROJECT_MONITORGENERATOR_H
+#endif // ASPECT_PROJECT_MONITORGENERATOR_H
