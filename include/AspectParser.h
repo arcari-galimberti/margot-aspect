@@ -21,8 +21,8 @@ public:
   std::vector<AdvGenPtr> parseAdviceGenerators() const;
 
 private:
-  std::string pathname;
-  pugi::xml_document aspect;
+  std::string _pathname;
+  pugi::xml_document _aspect;
 };
 }
 

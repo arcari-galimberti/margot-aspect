@@ -8,8 +8,8 @@
 
 namespace ag {
 
-AspectParser::AspectParser(const std::string &pathname) : pathname(pathname) {
-  auto result = aspect.load_file(pathname.c_str());
+AspectParser::AspectParser(const std::string &pathname) : _pathname(pathname) {
+  auto result = _aspect.load_file(pathname.c_str());
   if (!result) {
     std::cout << "XML " << pathname
               << " parsing error\n  Description: " << result.description()
@@ -20,7 +20,7 @@ AspectParser::AspectParser(const std::string &pathname) : pathname(pathname) {
 std::vector<AspectParser::AdvGenPtr>
 AspectParser::parseAdviceGenerators() const {
   auto generators = std::vector<AspectParser::AdvGenPtr>();
-  auto aspectNode = aspect.child("aspect");
+  auto aspectNode = _aspect.child("aspect");
   for (auto advice : aspectNode.children("advice")) {
     auto type = advice.attribute("type").value();
     auto functionName = advice.child("function-name").text();

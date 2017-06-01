@@ -30,9 +30,9 @@ public:
   virtual std::string generateCode() = 0;
 
 protected:
-  std::string functionName;
-  std::string returnType;
-  std::vector<Argument> arguments;
+  std::string _functionName;
+  std::string _returnType;
+  std::vector<Argument> _arguments;
 };
 }
 
