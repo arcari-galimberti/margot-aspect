@@ -32,6 +32,13 @@ std::vector<std::string> ag::MonitorGenerator::generateAdvices() {
   std::cout << "}\n\n";
 }
 std::vector<std::string> MonitorGenerator::generatePointcuts() {
-  return std::vector<std::string>();
+  auto argZeroName = _arguments.front().name();
+  auto argZeroType = _arguments.front().type();
+  auto ArgZeroReturnType = _arguments.front().type();
+
+  std::cout << "pointcut " << _functionName <<"_exec(" << argZeroType << " "
+            << argZeroName << ") = execution (" << _returnType << " " << " "
+            << _functionName << "(...) && args(" << argZeroName << ");" 
+
 }
 }

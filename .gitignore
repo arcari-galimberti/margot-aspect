@@ -46,3 +46,5 @@ cmake-build-debug
 
 # IntelliJ stuff
 .idea
+
+.DS_Store
