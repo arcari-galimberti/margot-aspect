@@ -26,7 +26,7 @@ std::vector<std::string> ag::MonitorGenerator::generateAdvices() {
   ss << "\tif (margot::foo::update(" << argZeroName << ")) {\n";
   ss << "\t\tmargot::foo::manager.configuration_applied();\n";
   ss << "\t}\n";
-  ss << "\tmargot::foo::start_monitor();";
+  ss << "\tmargot::foo::start_monitor();\n";
   ss << "}\n\n";
 
   advice.push_back(ss.str());
