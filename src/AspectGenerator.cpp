@@ -13,13 +13,12 @@ namespace ag {
 constexpr char AspectGenerator::ind[];
 constexpr char AspectGenerator::generatedIntro[];
 
-AspectGenerator::AspectGenerator(const std::string &_xmlPathname,
-                                 const std::string &_outputPathname)
-    : _xmlPathname(_xmlPathname), _outputPathname(_outputPathname),
-      _parser(_xmlPathname) {}
+AspectGenerator::AspectGenerator(const std::string &xmlPath,
+                                 const std::string &outputPath)
+    : _xmlPathname(xmlPath), _outputPathname(outputPath), _parser(xmlPath) {}
 
-void AspectGenerator::outputPathname(const std::string &_outputPathname) {
-  AspectGenerator::_outputPathname = _outputPathname;
+void AspectGenerator::outputPathname(const std::string &outputPath) {
+  AspectGenerator::_outputPathname = outputPath;
 }
 
 const std::string &AspectGenerator::generateAspect() {
@@ -63,6 +62,19 @@ void AspectGenerator::writeOnOutput() {
   of << _generatedAspect;
   if (!of) {
     throw std::ios_base::failure("Failed to write " + _outputPathname);
+  }
+}
+AspectGenerator::AspectGenerator(const AspectGenerator &oag)
+    : _xmlPathname(oag._xmlPathname), _parser(oag._parser),
+      _outputPathname(oag._outputPathname), _generatedAspect() {}
+
+void generateAspect(const std::string &xmlPathname,
+                    const std::string &outputPathname) {
+  auto ag = AspectGenerator(xmlPathname, outputPathname);
+
+  auto gend = ag.generateAspect();
+  if (!gend.empty()) {
+    ag.writeOnOutput();
   }
 }
 }

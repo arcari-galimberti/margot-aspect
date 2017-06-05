@@ -11,10 +11,11 @@
 namespace ag {
 class AspectGenerator {
 public:
-  AspectGenerator(const std::string &_xmlPathname,
-                  const std::string &_outputPathname);
+  AspectGenerator(const std::string &xmlPath,
+                  const std::string &outputPath);
+  AspectGenerator(const AspectGenerator &oag);
 
-  void outputPathname(const std::string &_outputPathname);
+  void outputPathname(const std::string &outputPath);
   const std::string &generateAspect();
   void writeOnOutput();
 
@@ -33,6 +34,8 @@ private:
       " * For any further details please reach us at <github link>\n"
       " */";
 };
+
+void generateAspect(const std::string &xmlPathname, const std::string& outputPathname);
 }
 
 #endif // ASPECT_PROJECT_ASPECTGENERATOR_H
