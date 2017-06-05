@@ -8,7 +8,7 @@
 
 namespace ag {
 
-AspectParser::AspectParser(const std::string &pathname) : _pathname(pathname) {
+AspectParser::AspectParser(const std::string &pathname) : _pathname(pathname), _aspect() {
   auto result = _aspect.load_file(_pathname.c_str());
   if (!result) {
     std::cout << "XML " << _pathname
@@ -20,6 +20,7 @@ AspectParser::AspectParser(const std::string &pathname) : _pathname(pathname) {
 std::vector<AspectParser::AdvGenPtr>
 AspectParser::parseAdviceGenerators() const {
   auto generators = std::vector<AspectParser::AdvGenPtr>();
+
   auto aspectNode = _aspect.child("aspect");
   for (auto advice : aspectNode.children("advice")) {
     auto type = advice.attribute("type").value();
@@ -32,12 +33,20 @@ AspectParser::parseAdviceGenerators() const {
       arguments.push_back(Argument(argType.as_string(), name.as_string()));
     }
 
-    if (type == "monitor") {
+    if (std::string(type) == "monitor") {
       generators.push_back(std::make_unique<MonitorGenerator>(
           functionName.as_string(), returnType.as_string(),
           std::move(arguments)));
     }
   }
   return generators;
+}
+AspectParser::AspectParser(const AspectParser &oap) : _pathname(oap._pathname), _aspect() {
+  auto result = _aspect.load_file(_pathname.c_str());
+  if (!result) {
+    std::cout << "XML " << _pathname
+              << " parsing error\n  Description: " << result.description()
+              << '\n';
+  }
 }
 }
