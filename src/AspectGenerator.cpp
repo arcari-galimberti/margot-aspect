@@ -12,6 +12,8 @@ namespace ag {
 // For linkage purpose
 constexpr char AspectGenerator::ind[];
 constexpr char AspectGenerator::generatedIntro[];
+constexpr char AspectGenerator::mainPointcut[];
+constexpr char AspectGenerator::mainAdvice[];
 
 AspectGenerator::AspectGenerator(const std::string &xmlPath,
                                  const std::string &outputPath)
@@ -32,12 +34,14 @@ const std::string &AspectGenerator::generateAspect() {
                                        "#include <margot.hpp>\n";
 
   // Emit code for pointcuts
+  generatedAspect << "\n" << mainPointcut;
   for (auto &ag : adviceGenerators) {
     for (auto &pointcut : ag->generatePointcuts()) {
       generatedAspect << "\n" << pointcut;
     }
     generatedAspect << "\n\n"
                        "aspect MargotAspect {\n";
+    generatedAspect << "\n\n" << ind << mainAdvice;
     for (auto &advice : ag->generateAdvices()) {
       generatedAspect << "\n\n" << ind << advice;
     }

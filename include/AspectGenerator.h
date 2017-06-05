@@ -33,6 +33,12 @@ private:
       " * is to make it not working with the Margot Aspect build system.\n"
       " * For any further details please reach us at <github link>\n"
       " */";
+  static constexpr char mainPointcut[] =
+      "pointcut main_exec() = execution(\"int main(...)\");";
+  static constexpr char mainAdvice[] =
+      "advice main_exec(): before(){\n"
+		  "\tmargot::init();\n"
+	    "}\n\n";
 };
 
 void generateAspect(const std::string &xmlPathname, const std::string& outputPathname);
