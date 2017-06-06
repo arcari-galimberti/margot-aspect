@@ -3,6 +3,7 @@
 //
 
 #include "../include/SelfTuneGenerator.h"
+#include <sstream>
 
 namespace ag {
 
@@ -23,7 +24,11 @@ Rule::Rule(const std::string &goalValue, std::unique_ptr<Predicate> predicate)
 Rule::Rule(Rule &&rule)
     : _goalValue(rule._goalValue), _predicate(std::move(rule._predicate)) {}
 
-SelfTuneGenerator::SelfTuneGenerator(const std::string &controlVar,
+const std::string &Rule::goalValue() const { return _goalValue; }
+
+const std::unique_ptr<Predicate> &Rule::predicate() const { return _predicate; }
+
+SelfTuneGenerator::SelfTuneGenerator(const ControlVar &controlVar,
                                      const std::string &goalName,
                                      std::vector<Rule> &&rules)
     : _controlVar(controlVar), _goalName(goalName),
@@ -35,18 +40,44 @@ SelfTuneGenerator::SelfTuneGenerator(SelfTuneGenerator &&other)
 
 std::vector<std::string>
 SelfTuneGenerator::generateAdvices(std::string indent) {
-  // TODO: Write implementation
-  return std::vector<std::string>();
+  auto advices = std::vector<std::string>();
+  auto ss = std::stringstream();
+
+  auto dind = indent + indent;
+
+  ss << indent << "advice " << _controlVar.name() << "_set() : after () {\n"
+     << dind << "tune_" << _goalName << "(*tjp->entity());\n"
+     << indent << "}";
+
+  advices.push_back(ss.str());
+  return advices;
 }
 
 std::vector<std::string>
 SelfTuneGenerator::generatePointcuts(std::string indent) {
-  // TODO: Write implementation
-  return std::vector<std::string>();
+  auto pointcuts = std::vector<std::string>();
+  auto ss = std::stringstream();
+
+  ss << indent << "pointcut " << _controlVar.name() << "_set() = set(\""
+     << _controlVar.type() << " ...::" << _controlVar.name() << "\");";
+
+  pointcuts.push_back(ss.str());
+  return pointcuts;
 }
+
 std::vector<std::string>
 SelfTuneGenerator::generateGoalTuner(std::string indent) {
   // TODO: Write implementation
   return std::vector<std::string>();
 }
+
+ControlVar::ControlVar(const std::string &_type, const std::string &_name)
+    : _type(_type), _name(_name) {}
+
+const std::string &ControlVar::type() const { return _type; }
+
+const std::string &ControlVar::name() const { return _name; }
+
+ControlVar::ControlVar(ControlVar &&other)
+    : _type(other._type), _name(other._name) {}
 }

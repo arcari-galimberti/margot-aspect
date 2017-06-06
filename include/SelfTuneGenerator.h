@@ -35,14 +35,30 @@ public:
   Rule(const std::string &goalValue, std::unique_ptr<Predicate> predicate);
   Rule(Rule &&rule);
 
+  const std::string &goalValue() const;
+  const std::unique_ptr<Predicate> &predicate() const;
+
 private:
   std::string _goalValue;
   std::unique_ptr<Predicate> _predicate;
 };
 
+struct ControlVar {
+public:
+  ControlVar(const std::string &_type, const std::string &_name);
+  ControlVar(ControlVar&& other);
+
+  const std::string &type() const;
+  const std::string &name() const;
+
+private:
+  std::string _type;
+  std::string _name;
+};
+
 class SelfTuneGenerator {
 public:
-  SelfTuneGenerator(const std::string &controlVar, const std::string &goalName,
+  SelfTuneGenerator(const ControlVar &controlVar, const std::string &goalName,
                     std::vector<Rule> &&rules);
   SelfTuneGenerator(SelfTuneGenerator &&other);
 
@@ -51,7 +67,7 @@ public:
   std::vector<std::string> generateGoalTuner(std::string indent);
 
 private:
-  std::string _controlVar;
+  ControlVar _controlVar;
   std::string _goalName;
   std::vector<Rule> _rules;
 };
