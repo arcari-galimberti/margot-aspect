@@ -11,8 +11,7 @@
 namespace ag {
 class AspectGenerator {
 public:
-  AspectGenerator(const std::string &xmlPath,
-                  const std::string &outputPath);
+  AspectGenerator(const std::string &xmlPath, const std::string &outputPath);
   AspectGenerator(const AspectGenerator &oag);
 
   void outputPathname(const std::string &outputPath);
@@ -35,13 +34,13 @@ private:
       " */";
   static constexpr char mainPointcut[] =
       "pointcut main_exec() = execution(\"int main(...)\");";
-  static constexpr char mainAdvice[] =
-      "advice main_exec(): before(){\n"
-		  "\tmargot::init();\n"
-	    "}\n\n";
+  static constexpr char mainAdvice[] = "advice main_exec() : before() {\n"
+                                       "    margot::init();\n"
+                                       "  }";
 };
 
-void generateAspect(const std::string &xmlPathname, const std::string& outputPathname);
+void generateAspect(const std::string &xmlPathname,
+                    const std::string &outputPathname);
 }
 
 #endif // ASPECT_PROJECT_ASPECTGENERATOR_H

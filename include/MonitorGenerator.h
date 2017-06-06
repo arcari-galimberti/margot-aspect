@@ -15,8 +15,8 @@ public:
                    const std::string &returnType,
                    const std::vector<Argument> &arguments);
 
-  std::vector<std::string> generateAdvices() override;
-  std::vector<std::string> generatePointcuts() override;
+  std::vector<std::string> generateAdvices(std::string indent) override;
+  std::vector<std::string> generatePointcuts(std::string indent) override;
 };
 }
 

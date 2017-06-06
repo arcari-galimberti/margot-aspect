@@ -36,14 +36,14 @@ const std::string &AspectGenerator::generateAspect() {
   // Emit code for pointcuts
   generatedAspect << "\n" << mainPointcut;
   for (auto &ag : adviceGenerators) {
-    for (auto &pointcut : ag->generatePointcuts()) {
+    for (auto &pointcut : ag->generatePointcuts(ind)) {
       generatedAspect << "\n" << pointcut;
     }
     generatedAspect << "\n\n"
                        "aspect MargotAspect {\n";
-    generatedAspect << "\n\n" << ind << mainAdvice;
-    for (auto &advice : ag->generateAdvices()) {
-      generatedAspect << "\n\n" << ind << advice;
+    generatedAspect << "\n" << ind << mainAdvice << '\n';
+    for (auto &advice : ag->generateAdvices(ind)) {
+      generatedAspect << "\n" << advice << '\n';
     }
     generatedAspect << "\n};\n";
   }
