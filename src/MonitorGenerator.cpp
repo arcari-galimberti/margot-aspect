@@ -13,7 +13,8 @@ ag::MonitorGenerator::MonitorGenerator(
     const std::vector<ag::Argument> &arguments)
     : AdviceGenerator(functionName, returnType, arguments) {}
 
-std::vector<std::string> ag::MonitorGenerator::generateAdvices(std::string indent) {
+std::vector<std::string>
+ag::MonitorGenerator::generateAdvices(std::string indent) {
   auto argZeroName = _arguments.front().name();
   auto argZeroType = _arguments.front().type();
   std::vector<std::string> advice;
@@ -23,12 +24,11 @@ std::vector<std::string> ag::MonitorGenerator::generateAdvices(std::string inden
   // before advice
   auto ss = std::stringstream();
   ss << indent << "advice " << _functionName << "_exec(" << argZeroName
-                  << ") : before(" << argZeroType + " " << argZeroName
-                  << ") {\n";
+     << ") : before(" << argZeroType + " " << argZeroName << ") {\n";
 
   ss << dind << "if (margot::foo::update(" << argZeroName << ")) {\n";
   ss << trind << "margot::foo::manager.configuration_applied();\n";
-  ss << dind <<"}\n";
+  ss << dind << "}\n";
   ss << dind << "margot::foo::start_monitor();\n";
   ss << indent << "}";
 
@@ -37,7 +37,7 @@ std::vector<std::string> ag::MonitorGenerator::generateAdvices(std::string inden
 
   // after advice
   ss << indent << "advice " << _functionName << "_exec(" << argZeroName
-            << ") : after(" << argZeroType << " " << argZeroName << ") {\n";
+     << ") : after(" << argZeroType << " " << argZeroName << ") {\n";
   ss << dind << "margot::foo::stop_monitor();\n";
   ss << dind << "margot::foo::log();\n";
   ss << indent << "}";
@@ -46,15 +46,17 @@ std::vector<std::string> ag::MonitorGenerator::generateAdvices(std::string inden
   return advice;
 }
 
-std::vector<std::string> MonitorGenerator::generatePointcuts(std::string indent) {
+std::vector<std::string>
+MonitorGenerator::generatePointcuts(std::string indent) {
   auto argZeroName = _arguments.front().name();
   auto argZeroType = _arguments.front().type();
   auto ArgZeroReturnType = _arguments.front().type();
   std::vector<std::string> pointcut;
 
-  pointcut.push_back("pointcut " + _functionName +"_exec(" + argZeroType + " "
-            + argZeroName + ") = execution(\"" + _returnType + " "
-            + _functionName + "(...)\") && args(" + argZeroName + ");");
+  pointcut.push_back("pointcut " + _functionName + "_exec(" + argZeroType +
+                     " " + argZeroName + ") = execution(\"" + _returnType +
+                     " " + _functionName + "(...)\") && args(" + argZeroName +
+                     ");");
 
   return pointcut;
 }

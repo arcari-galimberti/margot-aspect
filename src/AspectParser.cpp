@@ -8,7 +8,8 @@
 
 namespace ag {
 
-AspectParser::AspectParser(const std::string &pathname) : _pathname(pathname), _aspect() {
+AspectParser::AspectParser(const std::string &pathname)
+    : _pathname(pathname), _aspect() {
   auto result = _aspect.load_file(_pathname.c_str());
   if (!result) {
     std::cout << "XML " << _pathname
@@ -41,7 +42,9 @@ AspectParser::parseAdviceGenerators() const {
   }
   return generators;
 }
-AspectParser::AspectParser(const AspectParser &oap) : _pathname(oap._pathname), _aspect() {
+
+AspectParser::AspectParser(const AspectParser &oap)
+    : _pathname(oap._pathname), _aspect() {
   auto result = _aspect.load_file(_pathname.c_str());
   if (!result) {
     std::cout << "XML " << _pathname

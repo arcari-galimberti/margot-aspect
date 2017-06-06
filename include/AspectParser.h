@@ -18,7 +18,7 @@ public:
   using AdvGenPtr = std::unique_ptr<AdviceGenerator>;
 
   explicit AspectParser(const std::string &pathname);
-  AspectParser(const AspectParser& oap);
+  AspectParser(const AspectParser &oap);
   std::vector<AdvGenPtr> parseAdviceGenerators() const;
 
 private:

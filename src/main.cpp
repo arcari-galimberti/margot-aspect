@@ -14,17 +14,11 @@ buildParser(int argc, char **argv) {
   auto outputDesc = "Output (.ah) file";
   auto helpDesc = "Print this help message";
 
-  run.add_options()
-      ("generate,g", po::value<std::string>(), generateDesc)
-      ("output,o", po::value<std::string>(), outputDesc)
-      ("help,h", helpDesc)
-      ;
+  run.add_options()("generate,g", po::value<std::string>(), generateDesc)(
+      "output,o", po::value<std::string>(), outputDesc)("help,h", helpDesc);
 
   auto vm = po::variables_map();
-  po::store(po::command_line_parser(argc, argv)
-                .options(run)
-                .run(),
-            vm);
+  po::store(po::command_line_parser(argc, argv).options(run).run(), vm);
   po::notify(vm);
   return std::make_tuple(vm, run);
 };

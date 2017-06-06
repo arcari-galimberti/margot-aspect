@@ -11,6 +11,6 @@ Argument::Argument(const std::string &type, const std::string &name)
 AdviceGenerator::AdviceGenerator(const std::string &functionName,
                                  const std::string &returnType,
                                  const std::vector<Argument> &arguments)
-    : _functionName(functionName), _returnType(returnType), _arguments(arguments) {
-}
+    : _functionName(functionName), _returnType(returnType),
+      _arguments(arguments) {}
 }

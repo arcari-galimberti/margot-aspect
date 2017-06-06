@@ -68,6 +68,7 @@ void AspectGenerator::writeOnOutput() {
     throw std::ios_base::failure("Failed to write " + _outputPathname);
   }
 }
+
 AspectGenerator::AspectGenerator(const AspectGenerator &oag)
     : _xmlPathname(oag._xmlPathname), _parser(oag._parser),
       _outputPathname(oag._outputPathname), _generatedAspect() {}
