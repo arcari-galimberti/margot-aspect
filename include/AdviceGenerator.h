@@ -27,6 +27,7 @@ public:
   AdviceGenerator(const std::string &functionName,
                   const std::string &returnType,
                   const std::vector<Argument> &arguments);
+
   virtual std::vector<std::string> generateAdvices(std::string indent) = 0;
   virtual std::vector<std::string> generatePointcuts(std::string indent) = 0;
 

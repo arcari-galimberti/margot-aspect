@@ -52,4 +52,9 @@ AspectParser::AspectParser(const AspectParser &oap)
               << '\n';
   }
 }
+std::vector<AspectParser::STGenPtr>
+AspectParser::parseSelfTuneGenerators() const {
+  // TODO: Write implementation
+  return std::vector<AspectParser::STGenPtr>();
+}
 }

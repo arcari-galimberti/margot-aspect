@@ -12,7 +12,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES src/main.cpp src/AdviceGenerator.cpp include/AdviceGenerator.h src/MonitorGenerator.cpp include/MonitorGenerator.h src/AspectParser.cpp include/AspectParser.h src/AspectGenerator.cpp include/AspectGenerator.h)
+set(SOURCE_FILES src/main.cpp src/AdviceGenerator.cpp include/AdviceGenerator.h src/MonitorGenerator.cpp include/MonitorGenerator.h src/AspectParser.cpp include/AspectParser.h src/AspectGenerator.cpp include/AspectGenerator.h src/SelfTuneGenerator.cpp include/SelfTuneGenerator.h)
 add_executable(aspect_project ${SOURCE_FILES})
 
 # Linking
