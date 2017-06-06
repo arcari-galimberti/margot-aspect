@@ -44,4 +44,9 @@ SelfTuneGenerator::generatePointcuts(std::string indent) {
   // TODO: Write implementation
   return std::vector<std::string>();
 }
+std::vector<std::string>
+SelfTuneGenerator::generateGoalTuner(std::string indent) {
+  // TODO: Write implementation
+  return std::vector<std::string>();
+}
 }

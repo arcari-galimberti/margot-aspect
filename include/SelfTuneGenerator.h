@@ -48,6 +48,7 @@ public:
 
   std::vector<std::string> generateAdvices(std::string indent);
   std::vector<std::string> generatePointcuts(std::string indent);
+  std::vector<std::string> generateGoalTuner(std::string indent);
 
 private:
   std::string _controlVar;
