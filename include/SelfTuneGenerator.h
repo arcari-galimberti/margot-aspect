@@ -16,6 +16,7 @@ enum class PredicateType { EQ, GT, LT, GTE, LTE };
 struct Predicate {
 public:
   virtual std::string generateCondition(const std::string &controlVar) = 0;
+  virtual std::unique_ptr<Predicate> clone() const = 0;
 };
 
 struct SimplePredicate : public Predicate {
@@ -24,6 +25,7 @@ public:
   SimplePredicate(SimplePredicate &&other);
 
   std::string generateCondition(const std::string &controlVar) override;
+  std::unique_ptr<Predicate> clone() const override;
 
 private:
   PredicateType _type;
@@ -33,6 +35,7 @@ private:
 struct Rule {
 public:
   Rule(const std::string &goalValue, std::unique_ptr<Predicate> predicate);
+  Rule(const Rule& other);
   Rule(Rule &&rule);
 
   const std::string &goalValue() const;
@@ -46,6 +49,7 @@ private:
 struct ControlVar {
 public:
   ControlVar(const std::string &_type, const std::string &_name);
+  ControlVar(const ControlVar& other);
   ControlVar(ControlVar&& other);
 
   const std::string &type() const;
@@ -64,7 +68,7 @@ public:
 
   std::vector<std::string> generateAdvices(std::string indent);
   std::vector<std::string> generatePointcuts(std::string indent);
-  std::vector<std::string> generateGoalTuner(std::string indent);
+  std::string generateGoalTuner(std::string indent);
 
 private:
   ControlVar _controlVar;

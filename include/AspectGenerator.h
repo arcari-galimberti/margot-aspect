@@ -16,13 +16,16 @@ public:
 
   void outputPathname(const std::string &outputPath);
   const std::string &generateAspect();
-  void writeOnOutput();
+  const std::string &generateHeaders();
+  void writeAspect() const;
+  void writeHeaders() const;
 
 private:
   std::string _xmlPathname;
   std::string _outputPathname;
   AspectParser _parser;
   std::string _generatedAspect;
+  std::string _generatedHeaders;
 
   static constexpr char ind[] = "  ";
   static constexpr char generatedIntro[] =
@@ -32,11 +35,6 @@ private:
       " * is to make it not working with the Margot Aspect build system.\n"
       " * For any further details please reach us at <github link>\n"
       " */";
-  static constexpr char mainPointcut[] =
-      "pointcut main_exec() = execution(\"int main(...)\");";
-  static constexpr char mainAdvice[] = "advice main_exec() : before() {\n"
-                                       "    margot::init();\n"
-                                       "  }";
 };
 
 void generateAspect(const std::string &xmlPathname,

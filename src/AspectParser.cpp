@@ -64,11 +64,13 @@ AspectParser::parseSelfTuneGenerators() const {
     auto controlVar = ControlVar(cvType.as_string(), cvName.as_string());
     auto goalName = selfTune.child("goal-name").text();
     auto rules = std::vector<Rule>();
+
     for (auto rule : selfTune.children("rule")) {
       auto predNode = rule.child("predicate");
       auto predOperand = predNode.text();
       auto predTypeValue = predNode.attribute("type").value();
       auto predTypeString = std::string(predTypeValue);
+
       PredicateType predType;
       if(predTypeString == "eq") {
         predType = PredicateType::EQ;
@@ -85,10 +87,12 @@ AspectParser::parseSelfTuneGenerators() const {
       else if(predTypeString == "lte") {
         predType = PredicateType::LTE;
       }
-      auto pred = std::unique_ptr<Predicate>(new SimplePredicate(predOperand.as_string(), predType));
+
+      auto pred = std::make_unique<SimplePredicate>(predOperand.as_string(), predType);
       auto goalValue = rule.child("goal-value").text();
       rules.push_back(Rule(goalValue.as_string(), std::move(pred)));
     }
+
     generators.push_back(std::make_unique<SelfTuneGenerator>(
         controlVar, goalName.as_string(),
         std::move(rules)));

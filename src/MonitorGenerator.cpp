@@ -53,7 +53,7 @@ MonitorGenerator::generatePointcuts(std::string indent) {
   auto ArgZeroReturnType = _arguments.front().type();
   std::vector<std::string> pointcut;
 
-  pointcut.push_back("pointcut " + _functionName + "_exec(" + argZeroType +
+  pointcut.push_back(indent + "pointcut " + _functionName + "_exec(" + argZeroType +
                      " " + argZeroName + ") = execution(\"" + _returnType +
                      " " + _functionName + "(...)\") && args(" + argZeroName +
                      ");");
