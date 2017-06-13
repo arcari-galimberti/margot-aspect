@@ -34,17 +34,17 @@ std::unique_ptr<Predicate> SimplePredicate::clone() const {
   return std::make_unique<SimplePredicate>(_operand, _type);
 }
 
-Rule::Rule(const std::string &goalValue, std::unique_ptr<Predicate> predicate)
-    : _goalValue(goalValue), _predicate(std::move(predicate)) {}
+Rule::Rule(const std::string &value, std::unique_ptr<Predicate> predicate)
+    : _value(value), _predicate(std::move(predicate)) {}
 
 Rule::Rule(const Rule &other)
-    : _goalValue(other._goalValue), _predicate(other.predicate().clone()) {}
+    : _value(other._value), _predicate(other.predicate().clone()) {}
 
 Rule::Rule(Rule &&rule)
-    : _goalValue(std::move(rule._goalValue)),
+    : _value(std::move(rule._value)),
       _predicate(std::move(rule._predicate)) {}
 
-const std::string &Rule::goalValue() const { return _goalValue; }
+const std::string &Rule::value() const { return _value; }
 
 const Predicate & Rule::predicate() const { return *_predicate; }
 
@@ -88,7 +88,7 @@ std::string GoalTuner::generateGoalTuner(std::string indent) {
   auto dind = indent + "  ";
   auto trind = dind + "  ";
 
-  auto goalSetter = std::string("margot::foo::goal::") + _goalName + ".set";
+  auto goalSetter = std::string("margot::") + _blockName + "::goal::" + _goalName + ".set";
 
   ss << indent << "void tune_" << _goalName << "(" << _controlVar.type() << " "
      << _controlVar.name() << ") {\n";
@@ -97,11 +97,14 @@ std::string GoalTuner::generateGoalTuner(std::string indent) {
     ss << ((i == 0) ? (dind + "if ") : (dind + "} else if ")) << "("
        << _rules[i].predicate().generateCondition(_controlVar.name())
        << ") {\n"
-       << trind << goalSetter << "(" << _rules[i].goalValue() << ");\n";
+       << trind << goalSetter << "(" << _rules[i].value() << ");\n";
   }
 
   ss << dind << "}\n" << indent << "}";
   return ss.str();
+}
+const std::string &GoalTuner::blockName() const {
+  return _blockName;
 }
 
 ControlVar::ControlVar(const std::string &_type, const std::string &_name)

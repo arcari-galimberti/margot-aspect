@@ -35,15 +35,15 @@ private:
 
 struct Rule {
 public:
-  Rule(const std::string &goalValue, std::unique_ptr<Predicate> predicate);
+  Rule(const std::string &value, std::unique_ptr<Predicate> predicate);
   Rule(const Rule &other);
   Rule(Rule &&rule);
 
-  const std::string &goalValue() const;
+  const std::string &value() const;
   const Predicate &predicate() const;
 
 private:
-  std::string _goalValue;
+  std::string _value;
   std::unique_ptr<Predicate> _predicate;
 };
 
@@ -70,6 +70,8 @@ public:
   std::vector<std::string> generateAdvices(std::string indent);
   std::vector<std::string> generatePointcuts(std::string indent);
   std::string generateGoalTuner(std::string indent);
+
+  const std::string &blockName() const;
 
 private:
   ControlVar _controlVar;
