@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE aspect [
+<!ELEMENT aspect (monitor*, goal-tuner*, state-tuner*)>
+<!ATTLIST aspect block_name CDATA #REQUIRED>
+
+<!-- monitor -->
+<!ELEMENT monitor (function-name, return-type, argument*, configure-call*)>
+<!ELEMENT function-name (#PCDATA)>
+<!ELEMENT return-type (#PCDATA)>
+<!ELEMENT argument (type, name)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT configure-call (#PCDATA)>
+
+<!-- goal-tuner -->
+<!ELEMENT goal-tuner (control-var, goal-name, rule+)>
+<!ELEMENT control-var (type, name)>
+<!ELEMENT goal-name (#PCDATA)>
+<!ELEMENT rule ((predicate|and|or), value)>
+<!ELEMENT predicate (#PCDATA)>
+<!ATTLIST predicate type CDATA #REQUIRED>
+<!ELEMENT and (predicate, (predicate|and|or))>
+<!ELEMENT or (predicate, (predicate|and|or))>
+<!ELEMENT value (#PCDATA)>
+
+<!-- state-tuner -->
+<!ELEMENT state-tuner (control-var, rule+)>
+]>
+
+<aspect block_name="foo">
+	<monitor>
+		<function-name>do_work</function-name>
+		<return-type>void</return-type>
+		<argument>
+			<type>int</type>
+			<name>trials</name>
+		</argument>
+		<configure-call>mock_configure()</configure-call>
+	</monitor>
+	<goal-tuner>
+		<control-var>
+			<type>int</type>
+			<name>goal_condition</name>
+		</control-var>
+		<goal-name>my_execution_time_goal</goal-name>
+		<rule>
+			<predicate type="eq">1</predicate>
+			<value>20000</value>
+		</rule>
+		<rule>
+			<predicate type="eq">2</predicate>
+			<value>50000</value>
+		</rule>
+		<rule>
+			<predicate type="eq">3</predicate>
+			<value>30000</value>
+		</rule>
+		<rule>
+			<and>
+				<predicate type="gt">6</predicate>
+				<predicate type="lt">10</predicate>
+			</and>
+			<value>10000</value>
+		</rule>
+	</goal-tuner>
+	<state-tuner>
+		<control-var>
+			<type>bool</type>
+			<name>state_condition</name>
+		</control-var>
+		<rule>
+			<predicate type="eq">true</predicate>
+			<value>my_optimization</value>
+		</rule>
+		<rule>
+			<predicate type="eq">false</predicate>
+			<value>my_optimization_two</value>
+		</rule>
+	</state-tuner>
+</aspect>

@@ -1,0 +1,31 @@
+<margot>
+	<block name="foo">
+		<!-- MONITOR SECTION -->
+		<monitor name="my_elapsed_time_monitor" type="Time">
+			<creation>
+				<param name="time granularity">
+					<fixed value="margot::TimeMeasure::Microseconds"/>
+				</param>
+			</creation>
+			<expose var_name="avg_computation_time" what="average" />
+		</monitor>
+		<!-- GOAL SECTION -->
+		<goal name="my_execution_time_goal" monitor="my_elapsed_time_monitor" dFun="Average" cFun="LT" value="600000" />
+		<goal name="my_execution_time_goal_two" monitor="my_elapsed_time_monitor" dFun="Average" cFun="GT" value="500000" />
+		<!-- SW-KNOB SECTION -->
+		<knob name="num_trials" var_name="trials" var_type="int"/>
+		<!-- OPTIMIZATION SECTION -->
+		<state name="my_optimization" starting="yes" >
+			<minimize combination="linear">
+				<metric name="error" coef="1.0"/>
+			</minimize>
+			<subject to="my_execution_time_goal" metric_name="exec_time" priority="20" />
+		</state>
+		<state name="my_optimization_two">
+			<minimize combination="linear">
+				<metric name="error" coef="-1.0"/>
+			</minimize>
+			<subject to="my_execution_time_goal_two" metric_name="exec_time" priority="20" />
+		</state>
+	</block>
+</margot>
