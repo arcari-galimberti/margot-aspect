@@ -3,6 +3,7 @@
 //
 
 #include "../include/StateTuner.h"
+#include <sstream>
 
 namespace ag {
 
@@ -16,14 +17,55 @@ StateTuner::StateTuner(StateTuner &&other)
       _rules(std::move(other._rules)), _blockName(std::move(other._blockName)) {
 
 }
+
 std::vector<std::string> StateTuner::generateAdvices(std::string indent) {
-  return std::vector<std::string>();
-}
-std::vector<std::string> StateTuner::generatePointcuts(std::string indent) {
-  return std::vector<std::string>();
-}
-std::string StateTuner::generateStateTuner(std::string indent) {
-  return std::__cxx11::string();
+  auto advices = std::vector<std::string>();
+  auto ss = std::stringstream();
+
+  auto dind = indent + indent;
+
+  ss << indent << "advice " << _controlVar.name() << "_set() : after () {\n"
+     << dind << "tune_" << _blockName << "_state"
+     << "(*tjp->entity());\n"
+     << indent << "}";
+
+  advices.push_back(ss.str());
+  return advices;
 }
 
+std::vector<std::string> StateTuner::generatePointcuts(std::string indent) {
+  auto pointcuts = std::vector<std::string>();
+  auto ss = std::stringstream();
+
+  ss << indent << "pointcut " << _controlVar.name() << "_set() = set(\""
+     << _controlVar.type() << " ...::" << _controlVar.name() << "\");";
+
+  pointcuts.push_back(ss.str());
+  return pointcuts;
+}
+
+std::string StateTuner::generateStateTuner(std::string indent) {
+  auto ss = std::stringstream();
+  auto dind = indent + "  ";
+  auto trind = dind + "  ";
+
+  auto stateSetter =
+      std::string("margot::") + _blockName + "::manager.change_active_state";
+
+  ss << indent << "void tune_" << _blockName << "_state(" << _controlVar.type() << " "
+     << _controlVar.name() << ") {\n";
+
+  for (auto i = 0; i < _rules.size(); ++i) {
+    ss << ((i == 0) ? (dind + "if ") : (dind + "} else if ")) << "("
+       << _rules[i].predicate().generateCondition(_controlVar.name())
+       << ") {\n"
+       << trind << stateSetter << "(" << _rules[i].goalValue() << ");\n";
+  }
+
+  ss << dind << "}\n" << indent << "}";
+  return ss.str();
+}
+const std::string &StateTuner::blockName() const {
+  return _blockName;
+}
 }

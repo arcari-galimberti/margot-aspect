@@ -10,12 +10,15 @@
 namespace ag {
 
 class StateTuner {
+public:
   StateTuner(const ControlVar& controlVar, const std::vector<Rule>&& rules, const std::string& blockName);
   StateTuner(StateTuner &&other);
 
   std::vector<std::string> generateAdvices(std::string indent);
   std::vector<std::string> generatePointcuts(std::string indent);
   std::string generateStateTuner(std::string indent);
+
+  const std::string &blockName() const;
 
 private:
   ControlVar _controlVar;
