@@ -11,11 +11,12 @@ namespace ag {
 Argument::Argument(const std::string &type, const std::string &name)
     : _type(type), _name(name) {}
 
-ag::MonitorGenerator::MonitorGenerator(
-    const std::string &functionName, const std::string &returnType,
-    const std::vector<ag::Argument> &arguments)
+ag::MonitorGenerator::MonitorGenerator(const std::string &functionName,
+                                       const std::string &returnType,
+                                       const std::vector<Argument> &arguments,
+                                       const std::string &blockName)
     : _functionName(functionName), _returnType(returnType),
-      _arguments(arguments) {}
+      _arguments(arguments), _blockName(blockName) {}
 
 std::vector<std::string>
 ag::MonitorGenerator::generateAdvices(std::string indent) {

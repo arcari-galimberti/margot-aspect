@@ -5,8 +5,8 @@
 #ifndef ASPECT_PROJECT_ASPECTPARSER_H
 #define ASPECT_PROJECT_ASPECTPARSER_H
 
-#include "AdviceGenerator.h"
-#include "SelfTuneGenerator.h"
+#include "MonitorGenerator.h"
+#include "GoalTuner.h"
 
 #include <memory>
 #include <pugixml.hpp>
@@ -17,7 +17,7 @@ namespace ag {
 class AspectParser {
 public:
   using MonGenPtr = std::unique_ptr<MonitorGenerator>;
-  using STGenPtr = std::unique_ptr<SelfTuneGenerator>;
+  using STGenPtr = std::unique_ptr<GoalTuner>;
 
   explicit AspectParser(const std::string &pathname);
   AspectParser(const AspectParser &oap);

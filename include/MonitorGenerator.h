@@ -25,8 +25,9 @@ private:
 class MonitorGenerator {
 public:
   MonitorGenerator(const std::string &functionName,
-                  const std::string &returnType,
-                  const std::vector<Argument> &arguments);
+                   const std::string &returnType,
+                   const std::vector<Argument> &arguments,
+                   const std::string &blockName);
 
   std::vector<std::string> generateAdvices(std::string indent);
   std::vector<std::string> generatePointcuts(std::string indent);
@@ -35,6 +36,7 @@ private:
   std::string _functionName;
   std::string _returnType;
   std::vector<Argument> _arguments;
+  std::string _blockName;
 };
 }
 

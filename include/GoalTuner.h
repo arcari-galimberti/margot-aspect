@@ -15,7 +15,8 @@ enum class PredicateType { EQ, GT, LT, GTE, LTE };
 
 struct Predicate {
 public:
-  virtual std::string generateCondition(const std::string &controlVar) = 0;
+  virtual std::string
+  generateCondition(const std::string &controlVar) const = 0;
   virtual std::unique_ptr<Predicate> clone() const = 0;
 };
 
@@ -24,7 +25,7 @@ public:
   SimplePredicate(const std::string &operand, PredicateType type);
   SimplePredicate(SimplePredicate &&other);
 
-  std::string generateCondition(const std::string &controlVar) override;
+  std::string generateCondition(const std::string &controlVar) const override;
   std::unique_ptr<Predicate> clone() const override;
 
 private:
@@ -35,11 +36,11 @@ private:
 struct Rule {
 public:
   Rule(const std::string &goalValue, std::unique_ptr<Predicate> predicate);
-  Rule(const Rule& other);
+  Rule(const Rule &other);
   Rule(Rule &&rule);
 
   const std::string &goalValue() const;
-  const std::unique_ptr<Predicate> &predicate() const;
+  const Predicate &predicate() const;
 
 private:
   std::string _goalValue;
@@ -49,8 +50,8 @@ private:
 struct ControlVar {
 public:
   ControlVar(const std::string &_type, const std::string &_name);
-  ControlVar(const ControlVar& other);
-  ControlVar(ControlVar&& other);
+  ControlVar(const ControlVar &other);
+  ControlVar(ControlVar &&other);
 
   const std::string &type() const;
   const std::string &name() const;
@@ -60,11 +61,11 @@ private:
   std::string _name;
 };
 
-class SelfTuneGenerator {
+class GoalTuner {
 public:
-  SelfTuneGenerator(const ControlVar &controlVar, const std::string &goalName,
-                    std::vector<Rule> &&rules);
-  SelfTuneGenerator(SelfTuneGenerator &&other);
+  GoalTuner(const ControlVar &controlVar, const std::string &goalName,
+            std::vector<Rule> &&rules, const std::string &blockName);
+  GoalTuner(GoalTuner &&other);
 
   std::vector<std::string> generateAdvices(std::string indent);
   std::vector<std::string> generatePointcuts(std::string indent);
@@ -74,6 +75,7 @@ private:
   ControlVar _controlVar;
   std::string _goalName;
   std::vector<Rule> _rules;
+  std::string _blockName;
 };
 }
 

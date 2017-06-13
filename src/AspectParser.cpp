@@ -3,7 +3,6 @@
 //
 
 #include "../include/AspectParser.h"
-#include "../include/MonitorGenerator.h"
 #include <iostream>
 
 namespace ag {
@@ -69,30 +68,26 @@ AspectParser::parseSelfTuneGenerators() const {
       auto predTypeString = std::string(predTypeValue);
 
       PredicateType predType;
-      if(predTypeString == "eq") {
+      if (predTypeString == "eq") {
         predType = PredicateType::EQ;
-      }
-      else if(predTypeString == "gt") {
+      } else if (predTypeString == "gt") {
         predType = PredicateType::GT;
-      }
-      else if(predTypeString == "lt") {
+      } else if (predTypeString == "lt") {
         predType = PredicateType::LT;
-      }
-      else if(predTypeString == "gte") {
+      } else if (predTypeString == "gte") {
         predType = PredicateType::GTE;
-      }
-      else if(predTypeString == "lte") {
+      } else if (predTypeString == "lte") {
         predType = PredicateType::LTE;
       }
 
-      auto pred = std::make_unique<SimplePredicate>(predOperand.as_string(), predType);
+      auto pred =
+          std::make_unique<SimplePredicate>(predOperand.as_string(), predType);
       auto goalValue = rule.child("goal-value").text();
       rules.push_back(Rule(goalValue.as_string(), std::move(pred)));
     }
 
-    generators.push_back(std::make_unique<SelfTuneGenerator>(
-        controlVar, goalName.as_string(),
-        std::move(rules)));
+    generators.push_back(std::make_unique<GoalTuner>(
+        controlVar, goalName.as_string(), std::move(rules)));
   }
   return generators;
 }
