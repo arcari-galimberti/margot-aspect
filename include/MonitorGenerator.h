@@ -32,6 +32,8 @@ public:
   std::vector<std::string> generateAdvices(std::string indent);
   std::vector<std::string> generatePointcuts(std::string indent);
 
+  const std::string &blockName() const;
+
 private:
   std::string _functionName;
   std::string _returnType;
