@@ -18,7 +18,7 @@ AspectParser::AspectParser(const std::string &pathname)
 }
 
 std::vector<AspectParser::MonGenPtr>
-AspectParser::parseMonitorGenerators() const {
+AspectParser::parseMonitor() const {
   auto generators = std::vector<AspectParser::MonGenPtr>();
 
   auto aspectNode = _aspect.child("aspect");
@@ -49,9 +49,9 @@ AspectParser::AspectParser(const AspectParser &oap)
   }
 }
 
-std::vector<AspectParser::STGenPtr>
-AspectParser::parseSelfTuneGenerators() const {
-  auto generators = std::vector<AspectParser::STGenPtr>();
+std::vector<AspectParser::GTPtr>
+AspectParser::parseGoalTuner() const {
+  auto generators = std::vector<AspectParser::GTPtr>();
   auto aspectNode = _aspect.child("aspect");
   for (auto selfTune : aspectNode.children("self-tune")) {
     auto cvNode = selfTune.child("control-var");
@@ -90,5 +90,9 @@ AspectParser::parseSelfTuneGenerators() const {
         controlVar, goalName.as_string(), std::move(rules)));
   }
   return generators;
+}
+std::vector<AspectParser::STPtr> AspectParser::parseStateTuner() const {
+  // TODO: Provide real implementation
+  return std::vector<AspectParser::STPtr>();
 }
 }

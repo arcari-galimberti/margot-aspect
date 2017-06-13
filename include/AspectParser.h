@@ -7,6 +7,7 @@
 
 #include "MonitorGenerator.h"
 #include "GoalTuner.h"
+#include "StateTuner.h"
 
 #include <memory>
 #include <pugixml.hpp>
@@ -17,12 +18,14 @@ namespace ag {
 class AspectParser {
 public:
   using MonGenPtr = std::unique_ptr<MonitorGenerator>;
-  using STGenPtr = std::unique_ptr<GoalTuner>;
+  using GTPtr = std::unique_ptr<GoalTuner>;
+  using STPtr = std::unique_ptr<StateTuner>;
 
   explicit AspectParser(const std::string &pathname);
   AspectParser(const AspectParser &oap);
-  std::vector<MonGenPtr> parseMonitorGenerators() const;
-  std::vector<STGenPtr> parseSelfTuneGenerators() const;
+  std::vector<MonGenPtr> parseMonitor() const;
+  std::vector<GTPtr> parseGoalTuner() const;
+  std::vector<STPtr> parseStateTuner() const;
 
 private:
   std::string _pathname;
