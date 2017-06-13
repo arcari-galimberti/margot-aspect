@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <map>
+#include <set>
 
 namespace ag {
 
@@ -27,8 +29,9 @@ void AspectGenerator::outputPathname(const std::string &outputPath) {
 }
 
 const std::string &AspectGenerator::generateAspect() {
-  auto monitorGenerators = _parser.parseMonitorGenerators();
-  auto selfTuneGens = _parser.parseSelfTuneGenerators();
+  auto monitorGenerators = _parser.parseMonitor();
+  auto goalTuners = _parser.parseGoalTuner();
+  auto stateTuners = _parser.parseStateTuner();
 
   auto generatedAspect = std::ostringstream();
   auto mainPointcut =
@@ -44,37 +47,90 @@ const std::string &AspectGenerator::generateAspect() {
                                        "#include \"margotAspect.h\"\n"
                                        "#include <margot.hpp>\n";
 
-  // Emit code for pointcuts
-  generatedAspect << "\n" << mainPointcut;
-  for (auto &ag : monitorGenerators) {
-    for (auto &pointcut : ag->generatePointcuts("")) {
-      generatedAspect << "\n" << pointcut;
+  // Emit code for mandatory aspect
+  generatedAspect << "\naspect GeneralAspect {\n" << ind << mainPointcut <<
+                  '\n' << ind << mainAdvice << "\n};\n";
+
+  // Group generators for each block name
+  // TODO: Move this process to the XML parser. This is a waste of time
+  auto monMap = std::map<std::string, std::vector<AspectParser::MonGenPtr>>();
+  auto gtMap = std::map<std::string, std::vector<AspectParser::GTPtr>>();
+  auto stMap = std::map<std::string, std::vector<AspectParser::STPtr>>();
+
+  for (auto i = 0; i < monitorGenerators.size(); ++i) {
+    monMap[monitorGenerators[i]->blockName()].push_back(std::move(monitorGenerators[i]));
+  }
+
+  for (auto i = 0; i < goalTuners.size(); ++i) {
+    gtMap[goalTuners[i]->blockName()].push_back(std::move(goalTuners[i]));
+  }
+
+  for (auto i = 0; i < stateTuners.size(); ++i) {
+    stMap[stateTuners[i]->blockName()].push_back(std::move(stateTuners[i]));
+  }
+
+  // TODO: End of huge waste of time
+  auto blockNames = std::set<std::string>();
+
+  for (auto& kv : monMap) {
+    if (!blockNames.count(kv.first)) {
+      blockNames.insert(kv.first);
     }
   }
 
-  for (auto &st : selfTuneGens) {
-    for (auto &pointcut : st->generatePointcuts("")) {
-      generatedAspect << "\n" << pointcut;
+  for (auto& kv : gtMap) {
+    if (!blockNames.count(kv.first)) {
+      blockNames.insert(kv.first);
     }
   }
 
-  generatedAspect << "\n\naspect MargotAspect {\n";
-
-  // Emit code for advices
-  for (auto &ag : monitorGenerators) {
-    for (auto &advice : ag->generateAdvices(ind)) {
-      generatedAspect << "\n" << advice << '\n';
+  for (auto& kv : stMap) {
+    if (!blockNames.count(kv.first)) {
+      blockNames.insert(kv.first);
     }
   }
 
-  for (auto &st : selfTuneGens) {
-    for (auto &advice : st->generateAdvices(ind)) {
-      generatedAspect << "\n" << advice << '\n';
-    }
-  }
+  // Emit aspect code for each block name
+  for (auto &bn : blockNames) {
+    generatedAspect << "\n\naspect " << bn << "Aspect {\n";
 
-  generatedAspect << "\n" << ind << mainAdvice << '\n';
-  generatedAspect << "\n};\n";
+    // Emit code for MonitorGenerators
+    if (monMap.count(bn)) {
+      for (auto &mg : monMap[bn]) {
+        for (auto &pointcut : mg->generatePointcuts(ind)) {
+          generatedAspect << "\n" << pointcut;
+        }
+        for (auto &advice : mg->generateAdvices(ind)) {
+          generatedAspect << "\n" << advice << '\n';
+        }
+      }
+    }
+
+    // Emit code for GoalTuners
+    if (gtMap.count(bn)) {
+      for (auto &gt : gtMap[bn]) {
+        for (auto &pointcut : gt->generatePointcuts(ind)) {
+          generatedAspect << "\n" << pointcut;
+        }
+        for (auto &advice : gt->generateAdvices(ind)) {
+          generatedAspect << "\n" << advice << '\n';
+        }
+      }
+    }
+
+    // Emit code for StateTuners
+    if (stMap.count(bn)) {
+      for (auto &st : stMap[bn]) {
+        for (auto &pointcut : st->generatePointcuts(ind)) {
+          generatedAspect << "\n" << pointcut;
+        }
+        for (auto &advice : st->generateAdvices(ind)) {
+          generatedAspect << "\n" << advice << '\n';
+        }
+      }
+    }
+    generatedAspect << "\n};\n";
+  }
 
   // Emit trailing code
   generatedAspect << "\n#endif";
@@ -113,7 +169,9 @@ void AspectGenerator::writeHeaders() const {
 }
 
 const std::string &AspectGenerator::generateHeaders() {
-  auto selfTuneGen = _parser.parseSelfTuneGenerators();
+  auto goalTuners = _parser.parseGoalTuner();
+  auto stateTuners = _parser.parseStateTuner();
+
   auto gh = std::ostringstream();
 
   // Emit leading code
@@ -123,8 +181,13 @@ const std::string &AspectGenerator::generateHeaders() {
                           "#include <margot.hpp>\n\n";
 
   // Emit code for goal tuners
-  for (auto &st : selfTuneGen) {
-    gh << st->generateGoalTuner("");
+  for (auto &gt : goalTuners) {
+    gh << gt->generateGoalTuner("");
+  }
+
+  // Emit code for state tuners
+  for (auto &st : stateTuners) {
+    gh << st->generateStateTuner("");
   }
 
   // Emit trailing code

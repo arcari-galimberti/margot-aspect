@@ -59,7 +59,7 @@ std::string StateTuner::generateStateTuner(std::string indent) {
     ss << ((i == 0) ? (dind + "if ") : (dind + "} else if ")) << "("
        << _rules[i].predicate().generateCondition(_controlVar.name())
        << ") {\n"
-       << trind << stateSetter << "(" << _rules[i].goalValue() << ");\n";
+       << trind << stateSetter << "(" << _rules[i].value() << ");\n";
   }
 
   ss << dind << "}\n" << indent << "}";
