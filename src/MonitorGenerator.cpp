@@ -8,10 +8,14 @@
 
 namespace ag {
 
+Argument::Argument(const std::string &type, const std::string &name)
+    : _type(type), _name(name) {}
+
 ag::MonitorGenerator::MonitorGenerator(
     const std::string &functionName, const std::string &returnType,
     const std::vector<ag::Argument> &arguments)
-    : AdviceGenerator(functionName, returnType, arguments) {}
+    : _functionName(functionName), _returnType(returnType),
+      _arguments(arguments) {}
 
 std::vector<std::string>
 ag::MonitorGenerator::generateAdvices(std::string indent) {
@@ -53,11 +57,11 @@ MonitorGenerator::generatePointcuts(std::string indent) {
   auto ArgZeroReturnType = _arguments.front().type();
   std::vector<std::string> pointcut;
 
-  pointcut.push_back(indent + "pointcut " + _functionName + "_exec(" + argZeroType +
-                     " " + argZeroName + ") = execution(\"" + _returnType +
-                     " " + _functionName + "(...)\") && args(" + argZeroName +
-                     ");");
+  pointcut.push_back(indent + "pointcut " + _functionName + "_exec(" +
+                     argZeroType + " " + argZeroName + ") = execution(\"" +
+                     _returnType + " " + _functionName + "(...)\") && args(" +
+                     argZeroName + ");");
 
   return pointcut;
 }
-}
+} // namespace ag

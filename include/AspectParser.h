@@ -16,12 +16,12 @@ namespace ag {
 
 class AspectParser {
 public:
-  using AdvGenPtr = std::unique_ptr<AdviceGenerator>;
+  using MonGenPtr = std::unique_ptr<MonitorGenerator>;
   using STGenPtr = std::unique_ptr<SelfTuneGenerator>;
 
   explicit AspectParser(const std::string &pathname);
   AspectParser(const AspectParser &oap);
-  std::vector<AdvGenPtr> parseAdviceGenerators() const;
+  std::vector<MonGenPtr> parseMonitorGenerators() const;
   std::vector<STGenPtr> parseSelfTuneGenerators() const;
 
 private:

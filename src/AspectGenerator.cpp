@@ -27,7 +27,7 @@ void AspectGenerator::outputPathname(const std::string &outputPath) {
 }
 
 const std::string &AspectGenerator::generateAspect() {
-  auto adviceGenerators = _parser.parseAdviceGenerators();
+  auto monitorGenerators = _parser.parseMonitorGenerators();
   auto selfTuneGens = _parser.parseSelfTuneGenerators();
 
   auto generatedAspect = std::ostringstream();
@@ -46,7 +46,7 @@ const std::string &AspectGenerator::generateAspect() {
 
   // Emit code for pointcuts
   generatedAspect << "\n" << mainPointcut;
-  for (auto &ag : adviceGenerators) {
+  for (auto &ag : monitorGenerators) {
     for (auto &pointcut : ag->generatePointcuts("")) {
       generatedAspect << "\n" << pointcut;
     }
@@ -61,7 +61,7 @@ const std::string &AspectGenerator::generateAspect() {
   generatedAspect << "\n\naspect MargotAspect {\n";
 
   // Emit code for advices
-  for (auto &ag : adviceGenerators) {
+  for (auto &ag : monitorGenerators) {
     for (auto &advice : ag->generateAdvices(ind)) {
       generatedAspect << "\n" << advice << '\n';
     }

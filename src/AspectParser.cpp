@@ -18,9 +18,9 @@ AspectParser::AspectParser(const std::string &pathname)
   }
 }
 
-std::vector<AspectParser::AdvGenPtr>
-AspectParser::parseAdviceGenerators() const {
-  auto generators = std::vector<AspectParser::AdvGenPtr>();
+std::vector<AspectParser::MonGenPtr>
+AspectParser::parseMonitorGenerators() const {
+  auto generators = std::vector<AspectParser::MonGenPtr>();
 
   auto aspectNode = _aspect.child("aspect");
   for (auto advice : aspectNode.children("advice")) {
@@ -33,12 +33,9 @@ AspectParser::parseAdviceGenerators() const {
       auto name = argument.child("name").text();
       arguments.push_back(Argument(argType.as_string(), name.as_string()));
     }
-
-    if (std::string(type) == "monitor") {
-      generators.push_back(std::make_unique<MonitorGenerator>(
-          functionName.as_string(), returnType.as_string(),
-          std::move(arguments)));
-    }
+    generators.push_back(std::make_unique<MonitorGenerator>(
+        functionName.as_string(), returnType.as_string(),
+        std::move(arguments)));
   }
   return generators;
 }
