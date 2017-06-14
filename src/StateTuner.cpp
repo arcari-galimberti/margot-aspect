@@ -46,26 +46,24 @@ std::vector<std::string> StateTuner::generatePointcuts(std::string indent) {
 
 std::string StateTuner::generateStateTuner(std::string indent) {
   auto ss = std::stringstream();
-  auto dind = indent + "  ";
-  auto trind = dind + "  ";
+  auto dind = indent + indent;
+  auto trind = dind + indent;
 
   auto stateSetter =
       std::string("margot::") + _blockName + "::manager.change_active_state";
 
-  ss << indent << "void tune_" << _blockName << "_state(" << _controlVar.type() << " "
-     << _controlVar.name() << ") {\n";
+  ss << indent << "void tune_" << _blockName << "_state(" << _controlVar.type()
+     << " " << _controlVar.name() << ") {\n";
 
   for (auto i = 0; i < _rules.size(); ++i) {
     ss << ((i == 0) ? (dind + "if ") : (dind + "} else if ")) << "("
-       << _rules[i].predicate().generateCondition(_controlVar.name())
-       << ") {\n"
+       << _rules[i].predicate().generateCondition(_controlVar.name()) << ") {\n"
        << trind << stateSetter << "(" << _rules[i].value() << ");\n";
   }
 
   ss << dind << "}\n" << indent << "}";
   return ss.str();
 }
-const std::string &StateTuner::blockName() const {
-  return _blockName;
-}
-}
+
+const std::string &StateTuner::blockName() const { return _blockName; }
+} // namespace ag
