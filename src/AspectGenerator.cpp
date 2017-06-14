@@ -29,9 +29,9 @@ void AspectGenerator::outputPathname(const std::string &outputPath) {
 }
 
 const std::string &AspectGenerator::generateAspect() {
-  auto monitorGenerators = _parser.parseMonitor();
-  auto goalTuners = _parser.parseGoalTuner();
-  auto stateTuners = _parser.parseStateTuner();
+  auto monMap = _parser.parseMonitor();
+  auto gtMap = _parser.parseGoalTuner();
+  auto stMap = _parser.parseStateTuner();
 
   auto generatedAspect = std::ostringstream();
   auto mainPointcut =
@@ -51,25 +51,6 @@ const std::string &AspectGenerator::generateAspect() {
   generatedAspect << "\naspect GeneralAspect {\n" << ind << mainPointcut <<
                   '\n' << ind << mainAdvice << "\n};\n";
 
-  // Group generators for each block name
-  // TODO: Move this process to the XML parser. This is a waste of time
-  auto monMap = std::map<std::string, std::vector<AspectParser::MonGenPtr>>();
-  auto gtMap = std::map<std::string, std::vector<AspectParser::GTPtr>>();
-  auto stMap = std::map<std::string, std::vector<AspectParser::STPtr>>();
-
-  for (auto i = 0; i < monitorGenerators.size(); ++i) {
-    monMap[monitorGenerators[i]->blockName()].push_back(std::move(monitorGenerators[i]));
-  }
-
-  for (auto i = 0; i < goalTuners.size(); ++i) {
-    gtMap[goalTuners[i]->blockName()].push_back(std::move(goalTuners[i]));
-  }
-
-  for (auto i = 0; i < stateTuners.size(); ++i) {
-    stMap[stateTuners[i]->blockName()].push_back(std::move(stateTuners[i]));
-  }
-
-  // TODO: End of huge waste of time
   auto blockNames = std::set<std::string>();
 
   for (auto& kv : monMap) {

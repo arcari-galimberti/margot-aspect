@@ -5,8 +5,8 @@
 #ifndef ASPECT_PROJECT_ASPECTPARSER_H
 #define ASPECT_PROJECT_ASPECTPARSER_H
 
-#include "MonitorGenerator.h"
 #include "GoalTuner.h"
+#include "MonitorGenerator.h"
 #include "StateTuner.h"
 
 #include <memory>
@@ -23,14 +23,14 @@ public:
 
   explicit AspectParser(const std::string &pathname);
   AspectParser(const AspectParser &oap);
-  std::vector<MonGenPtr> parseMonitor() const;
-  std::vector<GTPtr> parseGoalTuner() const;
-  std::vector<STPtr> parseStateTuner() const;
+  std::map<std::string, std::vector<MonGenPtr>> parseMonitor() const;
+  std::map<std::string, std::vector<GTPtr>> parseGoalTuner() const;
+  std::map<std::string, std::vector<STPtr>> parseStateTuner() const;
 
 private:
   std::string _pathname;
   pugi::xml_document _aspect;
 };
-}
+} // namespace ag
 
 #endif // ASPECT_PROJECT_ASPECTPARSER_H
