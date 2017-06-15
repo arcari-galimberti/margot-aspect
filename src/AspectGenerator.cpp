@@ -5,9 +5,8 @@
 #include "../include/AspectGenerator.h"
 #include <algorithm>
 #include <fstream>
-#include <sstream>
-#include <map>
 #include <set>
+#include <sstream>
 
 namespace ag {
 
@@ -48,28 +47,34 @@ const std::string &AspectGenerator::generateAspect() {
                                        "#include <margot.hpp>\n";
 
   // Emit code for mandatory aspect
-  generatedAspect << "\naspect GeneralAspect {\n" << ind << mainPointcut <<
-                  '\n' << ind << mainAdvice << "\n};\n";
+  generatedAspect << "\naspect GeneralAspect {\n"
+                  << ind << mainPointcut << '\n'
+                  << ind << mainAdvice << "\n};\n";
 
-  auto blockNames = std::set<std::string>();
+  auto blockNames = std::vector<std::string>();
 
-  for (auto& kv : monMap) {
-    if (!blockNames.count(kv.first)) {
-      blockNames.insert(kv.first);
+  for (auto &kv : monMap) {
+    if (std::find(blockNames.begin(), blockNames.end(), kv.first) !=
+        blockNames.end()) {
+      blockNames.push_back(kv.first);
     }
   }
 
-  for (auto& kv : gtMap) {
-    if (!blockNames.count(kv.first)) {
-      blockNames.insert(kv.first);
+  for (auto &kv : gtMap) {
+    if (std::find(blockNames.begin(), blockNames.end(), kv.first) !=
+        blockNames.end()) {
+      blockNames.push_back(kv.first);
     }
   }
 
-  for (auto& kv : stMap) {
-    if (!blockNames.count(kv.first)) {
-      blockNames.insert(kv.first);
+  for (auto &kv : stMap) {
+    if (std::find(blockNames.begin(), blockNames.end(), kv.first) !=
+        blockNames.end()) {
+      blockNames.push_back(kv.first);
     }
   }
+
+  std::sort(blockNames.begin(), blockNames.end());
 
   // Emit aspect code for each block name
   for (auto &bn : blockNames) {
@@ -162,13 +167,18 @@ const std::string &AspectGenerator::generateHeaders() {
                           "#include <margot.hpp>\n\n";
 
   // Emit code for goal tuners
-  for (auto &gt : goalTuners) {
-    gh << gt->generateGoalTuner("");
+  for (auto &kv : goalTuners) {
+    for (auto &gt : kv.second) {
+      gh << gt->generateGoalTuner("");
+    }
   }
 
+
   // Emit code for state tuners
-  for (auto &st : stateTuners) {
-    gh << st->generateStateTuner("");
+  for (auto &kv : stateTuners) {
+    for (auto &st : kv.second) {
+      gh << st->generateStateTuner("");
+    }
   }
 
   // Emit trailing code
