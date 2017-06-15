@@ -22,7 +22,7 @@ std::vector<std::string> StateTuner::generateAdvices(std::string indent) {
   auto advices = std::vector<std::string>();
   auto ss = std::stringstream();
 
-  auto dind = indent + indent;
+  auto dind = indent + "  ";
 
   ss << indent << "advice " << _controlVar.name() << "_set() : after () {\n"
      << dind << "tune_" << _blockName << "_state"
@@ -46,8 +46,8 @@ std::vector<std::string> StateTuner::generatePointcuts(std::string indent) {
 
 std::string StateTuner::generateStateTuner(std::string indent) {
   auto ss = std::stringstream();
-  auto dind = indent + indent;
-  auto trind = dind + indent;
+  auto dind = indent + "  ";
+  auto trind = dind + "  ";
 
   auto stateSetter =
       std::string("margot::") + _blockName + "::manager.change_active_state";
