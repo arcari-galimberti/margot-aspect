@@ -17,7 +17,7 @@ ag::MonitorGenerator::MonitorGenerator(const std::string &functionName,
                                        const std::string &configureCall,
                                        const std::string &blockName)
     : _functionName(functionName), _returnType(returnType),
-      _arguments(arguments) _configureCall(configureCall),
+      _arguments(arguments), _configureCall(configureCall),
       _blockName(blockName) {}
 
 std::vector<std::string>
