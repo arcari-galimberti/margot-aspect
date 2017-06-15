@@ -42,6 +42,9 @@ ag::MonitorGenerator::generateAdvices(std::string indent) {
 
   ss << dind << "if (margot::" << _blockName << "::update(" << argZeroName
      << ")) {\n";
+  if (!_configureCall.empty()) {
+    ss << trind << _configureCall << ";\n";
+  }
   ss << trind << "margot::" << _blockName
      << "::manager.configuration_applied();\n";
   ss << dind << "}\n";
