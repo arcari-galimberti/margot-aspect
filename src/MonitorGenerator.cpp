@@ -33,8 +33,10 @@ ag::MonitorGenerator::generateAdvices(std::string indent) {
   ss << indent << "advice " << _functionName << "_exec(" << argZeroName
      << ") : before(" << argZeroType + " " << argZeroName << ") {\n";
 
-  ss << dind << "if (margot::" << _blockName << "::update(" << argZeroName << ")) {\n";
-  ss << trind << "margot::" << _blockName << "::manager.configuration_applied();\n";
+  ss << dind << "if (margot::" << _blockName << "::update(" << argZeroName
+     << ")) {\n";
+  ss << trind << "margot::" << _blockName
+     << "::manager.configuration_applied();\n";
   ss << dind << "}\n";
   ss << dind << "margot::" << _blockName << "::start_monitor();\n";
   ss << indent << "}";
@@ -66,8 +68,5 @@ MonitorGenerator::generatePointcuts(std::string indent) {
                      argZeroName + ");");
 
   return pointcut;
-}
-const std::string &MonitorGenerator::blockName() const {
-  return _blockName;
 }
 } // namespace ag
