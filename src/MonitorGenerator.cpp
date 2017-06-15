@@ -25,7 +25,7 @@ ag::MonitorGenerator::MonitorGenerator(const std::string &functionName,
                                        const std::vector<Argument> &arguments,
                                        const std::string &blockName)
     : _functionName(functionName), _returnType(returnType),
-      _arguments(arguments) _configureCall(""), _blockName(blockName) {}
+      _arguments(arguments), _configureCall(""), _blockName(blockName) {}
 
 std::vector<std::string>
 ag::MonitorGenerator::generateAdvices(std::string indent) {
