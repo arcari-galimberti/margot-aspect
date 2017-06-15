@@ -41,7 +41,7 @@ AspectParser::parseMonitor() const {
           functionName.as_string(), returnType.as_string(),
           std::move(arguments), configureCall.as_string(), blockName));
     }
-    generatorsMap[blockName].push_back(std::move(generators))
+    generatorsMap[blockName] = std::move(generators);
   }
   return generatorsMap;
 }
@@ -96,7 +96,7 @@ AspectParser::parseGoalTuner() const {
       generators.push_back(std::make_unique<GoalTuner>(
           controlVar, goalName.as_string(), std::move(rules), blockName));
     }
-    generatorsMap[blockName].push_back(std::move(generators))
+    generatorsMap[blockName] = std::move(generators);
   }
   return generatorsMap;
 }
@@ -140,7 +140,7 @@ AspectParser::parseStateTuner() const {
       generators.push_back(std::make_unique<StateTuner>(
           controlVar, std::move(rules), blockName));
     }
-    generatorsMap[blockName].push_back(std::move(generators))
+    generatorsMap[blockName] = std::move(generators);
   }
   return generatorsMap;
 }

@@ -12,6 +12,7 @@
 #include <memory>
 #include <pugixml.hpp>
 #include <string>
+#include <map>
 
 namespace ag {
 
