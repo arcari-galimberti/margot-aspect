@@ -35,11 +35,16 @@ AspectParser::parseMonitor() const {
         auto name = argument.child("name").text();
         arguments.push_back(Argument(argType.as_string(), name.as_string()));
       }
-      auto configureCall = advice.child("configure-call").text();
-      // there may also be none, must be managed
-      generators.push_back(std::make_unique<MonitorGenerator>(
-          functionName.as_string(), returnType.as_string(),
-          std::move(arguments), configureCall.as_string(), blockName));
+      auto configureCall = advice.child("configure-call").text().as_string();
+      if (configureCall.empty()) {
+        generators.push_back(std::make_unique<MonitorGenerator>(
+            functionName.as_string(), returnType.as_string(),
+            std::move(arguments), blockName));
+      } else {
+        generators.push_back(std::make_unique<MonitorGenerator>(
+            functionName.as_string(), returnType.as_string(),
+            std::move(arguments), configureCall, blockName));
+      }
     }
     generatorsMap[blockName] = std::move(generators);
   }
