@@ -5,7 +5,8 @@
 #ifndef ASPECT_PROJECT_STATETUNER_H
 #define ASPECT_PROJECT_STATETUNER_H
 
-#include "GoalTuner.h"
+#include <vector>
+#include "TunerElements.h"
 
 namespace ag {
 
