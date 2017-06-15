@@ -20,6 +20,13 @@ ag::MonitorGenerator::MonitorGenerator(const std::string &functionName,
       _arguments(arguments), _configureCall(configureCall),
       _blockName(blockName) {}
 
+ag::MonitorGenerator::MonitorGenerator(const std::string &functionName,
+                                       const std::string &returnType,
+                                       const std::vector<Argument> &arguments,
+                                       const std::string &blockName)
+    : _functionName(functionName), _returnType(returnType),
+      _arguments(arguments) _configureCall(""), _blockName(blockName) {}
+
 std::vector<std::string>
 ag::MonitorGenerator::generateAdvices(std::string indent) {
   auto argZeroName = _arguments.front().name();
