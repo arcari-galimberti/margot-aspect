@@ -25,18 +25,17 @@ AspectParser::parseMonitor() const {
     auto generators = std::vector<AspectParser::MonGenPtr>();
     auto blockNameValue = aspectNode.attribute("block_name").value();
     auto blockName = std::string(blockNameValue);
-    for (auto advice : aspectNode.children("advice")) {
-      auto type = advice.attribute("type").value();
-      auto functionName = advice.child("function-name").text();
-      auto returnType = advice.child("return-type").text();
+    for (auto monitor : aspectNode.children("monitor")) {
+      auto functionName = monitor.child("function-name").text();
+      auto returnType = monitor.child("return-type").text();
       auto arguments = std::vector<Argument>();
-      for (auto argument : advice.children("argument")) {
+      for (auto argument : monitor.children("argument")) {
         auto argType = argument.child("type").text();
         auto name = argument.child("name").text();
         arguments.push_back(Argument(argType.as_string(), name.as_string()));
       }
       auto configureCall =
-          std::string(advice.child("configure-call").text().as_string());
+          std::string(monitor.child("configure-call").text().as_string());
       if (configureCall.empty()) {
         generators.push_back(std::make_unique<MonitorGenerator>(
             functionName.as_string(), returnType.as_string(),
