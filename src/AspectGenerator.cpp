@@ -173,7 +173,6 @@ const std::string &AspectGenerator::generateHeaders() {
     }
   }
 
-
   // Emit code for state tuners
   for (auto &kv : stateTuners) {
     for (auto &st : kv.second) {

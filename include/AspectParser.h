@@ -9,10 +9,10 @@
 #include "MonitorGenerator.h"
 #include "StateTuner.h"
 
+#include <map>
 #include <memory>
 #include <pugixml.hpp>
 #include <string>
-#include <map>
 
 namespace ag {
 

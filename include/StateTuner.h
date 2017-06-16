@@ -5,14 +5,15 @@
 #ifndef ASPECT_PROJECT_STATETUNER_H
 #define ASPECT_PROJECT_STATETUNER_H
 
-#include <vector>
 #include "TunerElements.h"
+#include <vector>
 
 namespace ag {
 
 class StateTuner {
 public:
-  StateTuner(const ControlVar& controlVar, const std::vector<Rule>&& rules, const std::string& blockName);
+  StateTuner(const ControlVar &controlVar, const std::vector<Rule> &&rules,
+             const std::string &blockName);
   StateTuner(StateTuner &&other);
 
   std::vector<std::string> generateAdvices(std::string indent);
@@ -28,4 +29,4 @@ private:
 };
 }
 
-#endif //ASPECT_PROJECT_STATETUNER_H
+#endif // ASPECT_PROJECT_STATETUNER_H

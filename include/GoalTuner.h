@@ -5,10 +5,10 @@
 #ifndef ASPECT_PROJECT_SELFTUNEGENERATOR_H
 #define ASPECT_PROJECT_SELFTUNEGENERATOR_H
 
+#include "TunerElements.h"
 #include <memory>
 #include <string>
 #include <vector>
-#include "TunerElements.h"
 
 namespace ag {
 

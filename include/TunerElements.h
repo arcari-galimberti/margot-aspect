@@ -12,7 +12,8 @@ enum class PredicateType { EQ, GT, LT, GTE, LTE };
 
 struct Predicate {
 public:
-  virtual std::string generateCondition(const std::string &controlVar) const = 0;
+  virtual std::string
+  generateCondition(const std::string &controlVar) const = 0;
   virtual std::unique_ptr<Predicate> clone() const = 0;
 };
 
@@ -58,5 +59,4 @@ private:
 };
 }
 
-
-#endif //ASPECT_PROJECT_TUNERELEMENTS_H
+#endif // ASPECT_PROJECT_TUNERELEMENTS_H
