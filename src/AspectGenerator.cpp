@@ -54,21 +54,21 @@ const std::string &AspectGenerator::generateAspect() {
   auto blockNames = std::vector<std::string>();
 
   for (auto &kv : monMap) {
-    if (std::find(blockNames.begin(), blockNames.end(), kv.first) !=
+    if (std::find(blockNames.begin(), blockNames.end(), kv.first) ==
         blockNames.end()) {
       blockNames.push_back(kv.first);
     }
   }
 
   for (auto &kv : gtMap) {
-    if (std::find(blockNames.begin(), blockNames.end(), kv.first) !=
+    if (std::find(blockNames.begin(), blockNames.end(), kv.first) ==
         blockNames.end()) {
       blockNames.push_back(kv.first);
     }
   }
 
   for (auto &kv : stMap) {
-    if (std::find(blockNames.begin(), blockNames.end(), kv.first) !=
+    if (std::find(blockNames.begin(), blockNames.end(), kv.first) ==
         blockNames.end()) {
       blockNames.push_back(kv.first);
     }
@@ -78,7 +78,7 @@ const std::string &AspectGenerator::generateAspect() {
 
   // Emit aspect code for each block name
   for (auto &bn : blockNames) {
-    generatedAspect << "\n\naspect " << bn << "Aspect {\n";
+    generatedAspect << "\naspect " << bn << "Aspect {\n";
 
     // Emit code for MonitorGenerators
     if (monMap.count(bn)) {
@@ -169,19 +169,19 @@ const std::string &AspectGenerator::generateHeaders() {
   // Emit code for goal tuners
   for (auto &kv : goalTuners) {
     for (auto &gt : kv.second) {
-      gh << gt->generateGoalTuner("");
+      gh << gt->generateGoalTuner("") << "\n\n";
     }
   }
 
   // Emit code for state tuners
   for (auto &kv : stateTuners) {
     for (auto &st : kv.second) {
-      gh << st->generateStateTuner("");
+      gh << st->generateStateTuner("") << "\n\n";
     }
   }
 
   // Emit trailing code
-  gh << "\n\n#endif";
+  gh << "#endif";
   _generatedHeaders = gh.str();
 
   return _generatedHeaders;
