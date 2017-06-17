@@ -54,9 +54,10 @@ ag::MonitorGenerator::generateAdvices(std::string indent) {
       } else {
         firstKnob = false;
       }
-      knobsSS << arg.name()
+      knobsSS << arg.name();
     }
   }
+
   auto argStringType = argSSType.str();
   auto argStringNoType = argSSNoType.str();
   auto knobString = knobsSS.str();
