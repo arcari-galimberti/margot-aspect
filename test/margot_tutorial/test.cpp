@@ -9,8 +9,9 @@ const int change_state_cycle = 5;
 int goal_condition = 1;
 bool state_condition = true;
 
-void do_work(int trials, int some_knob) {
+void do_work(int trials, int some_knob, int value) {
   std::this_thread::sleep_for(std::chrono::milliseconds(trials * some_knob));
+  std::cout << "Output: " << value << "\n";
 }
 
 void mock_configure() { std::cout << "** Called function **\n"; }
@@ -19,6 +20,7 @@ int main() {
   int trials = 100;
   int knob = 2;
   int repetitions = 20;
+  int print;
   for (int i = 0; i < repetitions; ++i) {
     std::cout << "\nExecution #" << i + 1 << "\n";
     if (i % change_goal_cycle == 0) {
@@ -33,6 +35,7 @@ int main() {
       state_condition = !state_condition;
       std::cout << "** Changed state **\n";
     }
-    do_work(trials, knob);
+    print = i;
+    do_work(trials, knob, print);
   }
 }
