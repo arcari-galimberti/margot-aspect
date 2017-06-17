@@ -32,7 +32,15 @@ AspectParser::parseMonitor() const {
       for (auto argument : monitor.children("argument")) {
         auto argType = argument.child("type").text();
         auto name = argument.child("name").text();
-        arguments.push_back(Argument(argType.as_string(), name.as_string()));
+        auto knobValue = argument.attribute("sw-knob").value();
+        auto knobString = std::string(knobValue);
+        bool knob;
+        if (knobString == "yes") {
+          knob = true;
+        } else if (knobString == "no") {
+          knob = false;
+        }
+        arguments.push_back(Argument(argType.as_string(), name.as_string(), knob));
       }
       auto configureCall =
           std::string(monitor.child("configure-call").text().as_string());
