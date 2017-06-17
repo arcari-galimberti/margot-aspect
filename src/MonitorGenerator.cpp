@@ -29,18 +29,32 @@ ag::MonitorGenerator::MonitorGenerator(const std::string &functionName,
 
 std::vector<std::string>
 ag::MonitorGenerator::generateAdvices(std::string indent) {
-  auto argZeroName = _arguments.front().name();
-  auto argZeroType = _arguments.front().type();
   std::vector<std::string> advice;
   auto dind = indent + indent;
   auto trind = dind + indent;
 
+  auto argSSType = std::stringstream();
+  auto argSSNoType = std::stringstream();
+  auto firstArg = true;
+  for (auto &arg : _arguments) {
+    if (!firstArg) {
+      argSSType << ", ";
+      argSSNoType << ", ";
+    } else {
+      firstArg = false;
+    }
+    argSSType << arg.type() << " " << arg.name();
+    argSSNoType << arg.name();
+  }
+  auto argStringType = argSSType.str();
+  auto argStringNoType = argSSNoType.str();
+
   // before advice
   auto ss = std::stringstream();
-  ss << indent << "advice " << _functionName << "_exec(" << argZeroName
-     << ") : before(" << argZeroType + " " << argZeroName << ") {\n";
+  ss << indent << "advice " << _functionName << "_exec(" << argStringNoType
+     << ") : before(" << argStringType << ") {\n";
 
-  ss << dind << "if (margot::" << _blockName << "::update(" << argZeroName
+  ss << dind << "if (margot::" << _blockName << "::update(" << argStringNoType
      << ")) {\n";
   if (!_configureCall.empty()) {
     ss << trind << _configureCall << ";\n";
@@ -55,8 +69,8 @@ ag::MonitorGenerator::generateAdvices(std::string indent) {
   ss.str("");
 
   // after advice
-  ss << indent << "advice " << _functionName << "_exec(" << argZeroName
-     << ") : after(" << argZeroType << " " << argZeroName << ") {\n";
+  ss << indent << "advice " << _functionName << "_exec(" << argStringNoType
+     << ") : after(" << argStringType << ") {\n";
   ss << dind << "margot::" << _blockName << "::stop_monitor();\n";
   ss << dind << "margot::" << _blockName << "::log();\n";
   ss << indent << "}";
@@ -67,15 +81,28 @@ ag::MonitorGenerator::generateAdvices(std::string indent) {
 
 std::vector<std::string>
 MonitorGenerator::generatePointcuts(std::string indent) {
-  auto argZeroName = _arguments.front().name();
-  auto argZeroType = _arguments.front().type();
-  auto ArgZeroReturnType = _arguments.front().type();
   std::vector<std::string> pointcut;
 
+  auto argSSType = std::stringstream();
+  auto argSSNoType = std::stringstream();
+  auto firstArg = true;
+  for (auto &arg : _arguments) {
+    if (!firstArg) {
+      argSSType << ", ";
+      argSSNoType << ", ";
+    } else {
+      firstArg = false;
+    }
+    argSSType << arg.type() << " " << arg.name();
+    argSSNoType << arg.name();
+  }
+  auto argStringType = argSSType.str();
+  auto argStringNoType = argSSNoType.str();
+
   pointcut.push_back(indent + "pointcut " + _functionName + "_exec(" +
-                     argZeroType + " " + argZeroName + ") = execution(\"" +
-                     _returnType + " " + _functionName + "(...)\") && args(" +
-                     argZeroName + ");");
+                     argStringType + ") = execution(\"" + _returnType + " " +
+                     _functionName + "(...)\") && args(" + argStringNoType +
+                     ");");
 
   return pointcut;
 }
