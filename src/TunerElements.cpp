@@ -61,8 +61,8 @@ ControlVar::ControlVar(const ControlVar &other)
 
 std::string
 AndPredicate::generateCondition(const std::string &controlVar) const {
-  return _lhp->generateCondition(controlVar) + " && " +
-         _rhp->generateCondition(controlVar);
+  return std::string("(") + _lhp->generateCondition(controlVar) + " && " +
+         _rhp->generateCondition(controlVar) + ")";
 }
 
 std::unique_ptr<Predicate> AndPredicate::clone() const {
@@ -78,8 +78,8 @@ AndPredicate::AndPredicate(AndPredicate &&other)
 
 std::string
 OrPredicate::generateCondition(const std::string &controlVar) const {
-  return _lhp->generateCondition(controlVar) + " || " +
-         _rhp->generateCondition(controlVar);
+  return std::string("(") + _lhp->generateCondition(controlVar) + " || " +
+         _rhp->generateCondition(controlVar) + ")";
 }
 
 std::unique_ptr<Predicate> OrPredicate::clone() const {
