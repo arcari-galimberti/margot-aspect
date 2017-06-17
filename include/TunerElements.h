@@ -6,6 +6,8 @@
 #define ASPECT_PROJECT_TUNERELEMENTS_H
 
 #include <memory>
+#include <iostream>
+
 namespace ag {
 
 enum class PredicateType { EQ, GT, LT, GTE, LTE };
