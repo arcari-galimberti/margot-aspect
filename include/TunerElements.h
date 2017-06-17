@@ -6,7 +6,7 @@
 #define ASPECT_PROJECT_TUNERELEMENTS_H
 
 #include <memory>
-#include <iostream>
+#include <string>
 
 namespace ag {
 
