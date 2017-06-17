@@ -8,8 +8,9 @@
 
 namespace ag {
 
-Argument::Argument(const std::string &type, const std::string &name)
-    : _type(type), _name(name) {}
+Argument::Argument(const std::string &type, const std::string &name,
+                   const bool &swKnob)
+    : _type(type), _name(name), _swKnob(swKnob) {}
 
 ag::MonitorGenerator::MonitorGenerator(const std::string &functionName,
                                        const std::string &returnType,
@@ -35,7 +36,9 @@ ag::MonitorGenerator::generateAdvices(std::string indent) {
 
   auto argSSType = std::stringstream();
   auto argSSNoType = std::stringstream();
+  auto knobsSS = std::stringstream();
   auto firstArg = true;
+  auto firstKnob = true;
   for (auto &arg : _arguments) {
     if (!firstArg) {
       argSSType << ", ";
@@ -45,16 +48,25 @@ ag::MonitorGenerator::generateAdvices(std::string indent) {
     }
     argSSType << arg.type() << " " << arg.name();
     argSSNoType << arg.name();
+    if (arg.swKnob()) {
+      if (!firstKnob) {
+        knobsSS << ", ";
+      } else {
+        firstKnob = false;
+      }
+      knobsSS << arg.name()
+    }
   }
   auto argStringType = argSSType.str();
   auto argStringNoType = argSSNoType.str();
+  auto knobString = knobsSS.str();
 
   // before advice
   auto ss = std::stringstream();
   ss << indent << "advice " << _functionName << "_exec(" << argStringNoType
      << ") : before(" << argStringType << ") {\n";
 
-  ss << dind << "if (margot::" << _blockName << "::update(" << argStringNoType
+  ss << dind << "if (margot::" << _blockName << "::update(" << knobString
      << ")) {\n";
   if (!_configureCall.empty()) {
     ss << trind << _configureCall << ";\n";
