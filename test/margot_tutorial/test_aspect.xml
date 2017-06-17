@@ -20,8 +20,8 @@
 <!ELEMENT rule ((predicate|and|or), value)>
 <!ELEMENT predicate (#PCDATA)>
 <!ATTLIST predicate type CDATA #REQUIRED>
-<!ELEMENT and (predicate, (predicate|and|or))>
-<!ELEMENT or (predicate, (predicate|and|or))>
+<!ELEMENT and ((predicate|and|or), (predicate|and|or))>
+<!ELEMENT or ((predicate|and|or), (predicate|and|or))>
 <!ELEMENT value (#PCDATA)>
 
 <!-- state-tuner -->
@@ -65,10 +65,16 @@
 			<value>30000</value>
 		</rule>
 		<rule>
-			<and>
-				<predicate type="gt">6</predicate>
-				<predicate type="lt">10</predicate>
-			</and>
+			<or>
+				<and>
+					<predicate type="gt">3</predicate>
+					<predicate type="lt">6</predicate>
+				</and>
+				<and>
+					<predicate type="gte">6</predicate>
+					<predicate type="lte">8</predicate>
+				</and>
+			</or>
 			<value>10000</value>
 		</rule>
 	</goal-tuner>
