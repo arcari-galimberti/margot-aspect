@@ -231,26 +231,7 @@ AspectParser::parseStateTuner() const {
       auto controlVar = ControlVar(cvType.as_string(), cvName.as_string());
       auto rules = std::vector<Rule>();
       for (auto rule : stateTuner.children("rule")) {
-        auto predNode = rule.child("predicate");
-        auto predOperand = predNode.text();
-        auto predTypeValue = predNode.attribute("type").value();
-        auto predTypeString = std::string(predTypeValue);
-        PredicateType predType;
-        if (predTypeString == "eq") {
-          predType = PredicateType::EQ;
-        } else if (predTypeString == "gt") {
-          predType = PredicateType::GT;
-        } else if (predTypeString == "lt") {
-          predType = PredicateType::LT;
-        } else if (predTypeString == "gte") {
-          predType = PredicateType::GTE;
-        } else if (predTypeString == "lte") {
-          predType = PredicateType::LTE;
-        }
-        auto pred = std::make_unique<SimplePredicate>(predOperand.as_string(),
-                                                      predType);
-        auto goalValue = rule.child("value").text();
-        rules.push_back(Rule(goalValue.as_string(), std::move(pred)));
+        rules.push_back(parseRule(rule));
       }
       generators.push_back(std::make_unique<StateTuner>(
           controlVar, std::move(rules), blockName));
