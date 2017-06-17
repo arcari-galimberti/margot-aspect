@@ -58,4 +58,38 @@ ControlVar::ControlVar(ControlVar &&other)
 
 ControlVar::ControlVar(const ControlVar &other)
     : _type(other._type), _name(other._name) {}
+
+std::string
+AndPredicate::generateCondition(const std::string &controlVar) const {
+  return _lhp->generateCondition(controlVar) + " && " +
+         _rhp->generateCondition(controlVar);
+}
+
+std::unique_ptr<Predicate> AndPredicate::clone() const {
+  return std::make_unique<AndPredicate>(_lhp->clone(), _rhp->clone());
+}
+
+AndPredicate::AndPredicate(std::unique_ptr<Predicate> lhp,
+                           std::unique_ptr<Predicate> rhp)
+    : _lhp(std::move(lhp)), _rhp(std::move(rhp)) {}
+
+AndPredicate::AndPredicate(AndPredicate &&other)
+    : _lhp(std::move(other._lhp)), _rhp(std::move(other._rhp)) {}
+
+std::string
+OrPredicate::generateCondition(const std::string &controlVar) const {
+  return _lhp->generateCondition(controlVar) + " || " +
+         _rhp->generateCondition(controlVar);
+}
+
+std::unique_ptr<Predicate> OrPredicate::clone() const {
+  return std::make_unique<OrPredicate>(_lhp->clone(), _rhp->clone());
+}
+
+OrPredicate::OrPredicate(std::unique_ptr<Predicate> lhp,
+                         std::unique_ptr<Predicate> rhp)
+    : _lhp(std::move(lhp)), _rhp(std::move(rhp)) {}
+
+OrPredicate::OrPredicate(OrPredicate &&other)
+    : _lhp(std::move(other._lhp)), _rhp(std::move(other._rhp)) {}
 }

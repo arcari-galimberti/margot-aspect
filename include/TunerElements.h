@@ -32,6 +32,30 @@ private:
   std::string _operand;
 };
 
+struct AndPredicate : public Predicate {
+  AndPredicate(std::unique_ptr<Predicate> lhp, std::unique_ptr<Predicate> rhp);
+  AndPredicate(AndPredicate &&other);
+
+  std::string generateCondition(const std::string &controlVar) const override;
+  std::unique_ptr<Predicate> clone() const override;
+
+private:
+  std::unique_ptr<Predicate> _lhp;
+  std::unique_ptr<Predicate> _rhp;
+};
+
+struct OrPredicate : public Predicate {
+  OrPredicate(std::unique_ptr<Predicate> lhp, std::unique_ptr<Predicate> rhp);
+  OrPredicate(OrPredicate &&other);
+
+  std::string generateCondition(const std::string &controlVar) const override;
+  std::unique_ptr<Predicate> clone() const override;
+
+private:
+  std::unique_ptr<Predicate> _lhp;
+  std::unique_ptr<Predicate> _rhp;
+};
+
 struct Rule {
 public:
   Rule(const std::string &value, std::unique_ptr<Predicate> predicate);
