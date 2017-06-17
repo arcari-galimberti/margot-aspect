@@ -14,8 +14,9 @@
 		<goal name="my_execution_time_goal_two" monitor="my_elapsed_time_monitor" dFun="Average" cFun="GT" value="500000" />
 		<!-- SW-KNOB SECTION -->
 		<knob name="num_trials" var_name="trials" var_type="int"/>
+		<knob name="knob_two" var_name="knob" var_type="int"/>
 		<!-- OPTIMIZATION SECTION -->
-		<state name="my_optimization" starting="yes" >
+		<state name="my_optimization" starting="yes">
 			<minimize combination="linear">
 				<metric name="error" coef="1.0"/>
 			</minimize>

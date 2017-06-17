@@ -35,6 +35,10 @@
 			<type>int</type>
 			<name>trials</name>
 		</argument>
+		<argument>
+			<type>int</type>
+			<name>knob</name>
+		</argument>		
 		<configure-call>mock_configure()</configure-call>
 	</monitor>
 	<goal-tuner>
