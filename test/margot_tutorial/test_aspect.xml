@@ -8,6 +8,7 @@
 <!ELEMENT function-name (#PCDATA)>
 <!ELEMENT return-type (#PCDATA)>
 <!ELEMENT argument (type, name)>
+<!ATTLIST argument sw-knob CDATA #REQUIRED>
 <!ELEMENT type (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT configure-call (#PCDATA)>
@@ -31,13 +32,17 @@
 	<monitor>
 		<function-name>do_work</function-name>
 		<return-type>void</return-type>
-		<argument>
+		<argument sw-knob="yes">
 			<type>int</type>
 			<name>trials</name>
 		</argument>
-		<argument>
+		<argument sw-knob="yes">
 			<type>int</type>
 			<name>knob</name>
+		</argument>
+		<argument sw-knob="no">
+			<type>int</type>
+			<name>print</name>
 		</argument>		
 		<configure-call>mock_configure()</configure-call>
 	</monitor>
