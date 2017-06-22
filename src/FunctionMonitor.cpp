@@ -2,7 +2,7 @@
 // Created by Andrea Galimberti on 30/05/2017.
 //
 
-#include "../include/FunctionMonitorGenerator.h"
+#include "../include/FunctionMonitor.h"
 #include <iostream>
 #include <sstream>
 
@@ -12,7 +12,7 @@ Argument::Argument(const std::string &type, const std::string &name,
                    const bool &swKnob)
     : _type(type), _name(name), _swKnob(swKnob) {}
 
-ag::FunctionMonitorGenerator::FunctionMonitorGenerator(const std::string &functionName,
+ag::FunctionMonitor::FunctionMonitor(const std::string &functionName,
                                        const std::string &returnType,
                                        const std::vector<Argument> &arguments,
                                        const std::string &configureCall,
@@ -21,7 +21,7 @@ ag::FunctionMonitorGenerator::FunctionMonitorGenerator(const std::string &functi
       _arguments(arguments), _configureCall(configureCall),
       _blockName(blockName) {}
 
-ag::FunctionMonitorGenerator::FunctionMonitorGenerator(const std::string &functionName,
+ag::FunctionMonitor::FunctionMonitor(const std::string &functionName,
                                        const std::string &returnType,
                                        const std::vector<Argument> &arguments,
                                        const std::string &blockName)
@@ -29,7 +29,7 @@ ag::FunctionMonitorGenerator::FunctionMonitorGenerator(const std::string &functi
       _arguments(arguments), _configureCall(""), _blockName(blockName) {}
 
 std::vector<std::string>
-ag::FunctionMonitorGenerator::generateAdvices(std::string indent) {
+ag::FunctionMonitor::generateAdvices(std::string indent) {
   std::vector<std::string> advice;
   auto dind = indent + indent;
   auto trind = dind + indent;
@@ -93,7 +93,7 @@ ag::FunctionMonitorGenerator::generateAdvices(std::string indent) {
 }
 
 std::vector<std::string>
-FunctionMonitorGenerator::generatePointcuts(std::string indent) {
+FunctionMonitor::generatePointcuts(std::string indent) {
   std::vector<std::string> pointcut;
 
   auto argSSType = std::stringstream();

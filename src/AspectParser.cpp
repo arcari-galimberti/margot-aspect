@@ -47,11 +47,11 @@ AspectParser::parseFunctionMonitor() const {
       auto configureCall =
           std::string(monitor.child("configure-call").text().as_string());
       if (configureCall.empty()) {
-        generators.push_back(std::make_unique<FunctionMonitorGenerator>(
+        generators.push_back(std::make_unique<FunctionMonitor>(
             functionName.as_string(), returnType.as_string(),
             std::move(arguments), blockName));
       } else {
-        generators.push_back(std::make_unique<FunctionMonitorGenerator>(
+        generators.push_back(std::make_unique<FunctionMonitor>(
             functionName.as_string(), returnType.as_string(),
             std::move(arguments), configureCall, blockName));
       }

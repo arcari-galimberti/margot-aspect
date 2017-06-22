@@ -12,7 +12,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES src/main.cpp src/FunctionMonitorGenerator.cpp include/FunctionMonitorGenerator.h src/AspectParser.cpp include/AspectParser.h src/AspectGenerator.cpp include/AspectGenerator.h src/GoalTuner.cpp include/GoalTuner.h src/StateTuner.cpp include/StateTuner.h src/TunerElements.cpp include/TunerElements.h)
+set(SOURCE_FILES src/main.cpp src/FunctionMonitor.cpp include/FunctionMonitor.h src/AspectParser.cpp include/AspectParser.h src/AspectGenerator.cpp include/AspectGenerator.h src/GoalTuner.cpp include/GoalTuner.h include/RegionMonitor.h src/RegionMonitor.cpp src/StateTuner.cpp include/StateTuner.h src/TunerElements.cpp include/TunerElements.h include/MonitorGenerator.h src/RegionMonitor.cpp)
 add_executable(aspect_project ${SOURCE_FILES})
 
 # Linking

@@ -6,7 +6,7 @@
 #define ASPECT_PROJECT_ASPECTPARSER_H
 
 #include "GoalTuner.h"
-#include "FunctionMonitorGenerator.h"
+#include "FunctionMonitor.h"
 #include "StateTuner.h"
 
 #include <map>
@@ -18,7 +18,7 @@ namespace ag {
 
 class AspectParser {
 public:
-  using FMGPtr = std::unique_ptr<FunctionMonitorGenerator>;
+  using FMGPtr = std::unique_ptr<FunctionMonitor>;
   using GTPtr = std::unique_ptr<GoalTuner>;
   using STPtr = std::unique_ptr<StateTuner>;
 
