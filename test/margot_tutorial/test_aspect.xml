@@ -54,15 +54,15 @@
 		<goal-name>my_execution_time_goal</goal-name>
 		<rule>
 			<predicate type="eq">1</predicate>
-			<value>20000</value>
+			<value>80000</value>
 		</rule>
 		<rule>
 			<predicate type="eq">2</predicate>
-			<value>50000</value>
+			<value>200000</value>
 		</rule>
 		<rule>
 			<predicate type="eq">3</predicate>
-			<value>30000</value>
+			<value>50000</value>
 		</rule>
 		<rule>
 			<or>
@@ -71,11 +71,11 @@
 					<predicate type="lt">6</predicate>
 				</and>
 				<and>
-					<predicate type="gte">6</predicate>
+					<predicate type="gte">7</predicate>
 					<predicate type="lte">8</predicate>
 				</and>
 			</or>
-			<value>10000</value>
+			<value>300000</value>
 		</rule>
 	</goal-tuner>
 	<state-tuner>
