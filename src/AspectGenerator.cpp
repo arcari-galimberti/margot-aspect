@@ -169,14 +169,14 @@ const std::string &AspectGenerator::generateHeaders() {
   // Emit code for goal tuners
   for (auto &kv : goalTuners) {
     for (auto &gt : kv.second) {
-      gh << gt->generateGoalTuner("") << "\n\n";
+      gh << gt->generateHeaders("") << "\n\n";
     }
   }
 
   // Emit code for state tuners
   for (auto &kv : stateTuners) {
     for (auto &st : kv.second) {
-      gh << st->generateStateTuner("") << "\n\n";
+      gh << st->generateHeaders("") << "\n\n";
     }
   }
 

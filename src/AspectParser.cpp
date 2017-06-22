@@ -47,11 +47,11 @@ AspectParser::parseMonitor() const {
       auto configureCall =
           std::string(monitor.child("configure-call").text().as_string());
       if (configureCall.empty()) {
-        generators.push_back(std::make_unique<MonitorGenerator>(
+        generators.push_back(std::make_unique<FunctionMonitor>(
             functionName.as_string(), returnType.as_string(),
             std::move(arguments), blockName));
       } else {
-        generators.push_back(std::make_unique<MonitorGenerator>(
+        generators.push_back(std::make_unique<FunctionMonitor>(
             functionName.as_string(), returnType.as_string(),
             std::move(arguments), configureCall, blockName));
       }
@@ -93,17 +93,21 @@ static auto parseSimplePredicate(const pugi::xml_node &predicate) {
 }
 
 static auto parseRule(const pugi::xml_node &rule) {
-  using Context = std::tuple<std::string, std::unique_ptr<Predicate>,
-                             std::unique_ptr<Predicate>>;
-  auto cxtStack = std::stack<Context>();
-  auto retStack = std::stack<std::unique_ptr<Predicate>>();
-
+  // Simple case: Rule has a single child that is a simple-predicate. EasyPeasy.
   if (rule.child("predicate")) {
     auto predNode = rule.child("predicate");
     auto pred = parseSimplePredicate(predNode);
     auto goalValue = rule.child("value").text();
     return Rule(goalValue.as_string(), std::move(pred));
   } else {
+    // Rule has at-least a child that is a complex predicate (and/or). We need
+    // to travel the whole XML tree and build complex Predicate objects out of
+    // the simple ones. We do this iteratively to achieve higher performance
+    // and to avoid any possibility of exceeding the stack size.
+    using Context = std::tuple<std::string, std::unique_ptr<Predicate>,
+                               std::unique_ptr<Predicate>>;
+    auto cxtStack = std::stack<Context>();
+    auto retStack = std::stack<std::unique_ptr<Predicate>>();
     auto parentNode = pugi::xml_node();
     auto predNode =
         ((rule.child("and")) ? rule.child("and") : rule.child("or"));
