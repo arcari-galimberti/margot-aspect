@@ -28,7 +28,7 @@ void AspectGenerator::outputPathname(const std::string &outputPath) {
 }
 
 const std::string &AspectGenerator::generateAspect() {
-  auto monMap = _parser.parseMonitor();
+  auto monMap = _parser.parseFunctionMonitor();
   auto gtMap = _parser.parseGoalTuner();
   auto stMap = _parser.parseStateTuner();
 

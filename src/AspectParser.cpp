@@ -18,15 +18,15 @@ AspectParser::AspectParser(const std::string &pathname)
   }
 }
 
-std::map<std::string, std::vector<AspectParser::MonGenPtr>>
-AspectParser::parseMonitor() const {
+std::map<std::string, std::vector<AspectParser::FMGPtr>>
+AspectParser::parseFunctionMonitor() const {
   auto generatorsMap =
-      std::map<std::string, std::vector<AspectParser::MonGenPtr>>();
+      std::map<std::string, std::vector<AspectParser::FMGPtr>>();
   for (auto aspectNode : _aspect.children("aspect")) {
-    auto generators = std::vector<AspectParser::MonGenPtr>();
+    auto generators = std::vector<AspectParser::FMGPtr>();
     auto blockNameValue = aspectNode.attribute("block_name").value();
     auto blockName = std::string(blockNameValue);
-    for (auto monitor : aspectNode.children("monitor")) {
+    for (auto monitor : aspectNode.children("function-monitor")) {
       auto functionName = monitor.child("function-name").text();
       auto returnType = monitor.child("return-type").text();
       auto arguments = std::vector<Argument>();
@@ -47,11 +47,11 @@ AspectParser::parseMonitor() const {
       auto configureCall =
           std::string(monitor.child("configure-call").text().as_string());
       if (configureCall.empty()) {
-        generators.push_back(std::make_unique<MonitorGenerator>(
+        generators.push_back(std::make_unique<FunctionMonitorGenerator>(
             functionName.as_string(), returnType.as_string(),
             std::move(arguments), blockName));
       } else {
-        generators.push_back(std::make_unique<MonitorGenerator>(
+        generators.push_back(std::make_unique<FunctionMonitorGenerator>(
             functionName.as_string(), returnType.as_string(),
             std::move(arguments), configureCall, blockName));
       }

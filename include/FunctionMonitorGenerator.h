@@ -25,15 +25,15 @@ private:
   bool _swKnob;
 };
 
-class MonitorGenerator {
+class FunctionMonitorGenerator {
 public:
-  MonitorGenerator(const std::string &functionName,
+  FunctionMonitorGenerator(const std::string &functionName,
                    const std::string &returnType,
                    const std::vector<Argument> &arguments,
                    const std::string &configureCall,
                    const std::string &blockName);
 
-  MonitorGenerator(const std::string &functionName,
+  FunctionMonitorGenerator(const std::string &functionName,
                    const std::string &returnType,
                    const std::vector<Argument> &arguments,
                    const std::string &blockName);
