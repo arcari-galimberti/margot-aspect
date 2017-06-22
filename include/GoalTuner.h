@@ -20,7 +20,7 @@ public:
 
   std::vector<std::string> generateAdvices(std::string indent);
   std::vector<std::string> generatePointcuts(std::string indent);
-  std::string generateHeaders(std::string indent);
+  std::string generateGoalTuner(std::string indent);
 
   const std::string &blockName() const;
 

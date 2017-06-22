@@ -42,7 +42,7 @@ std::vector<std::string> GoalTuner::generatePointcuts(std::string indent) {
   return pointcuts;
 }
 
-std::string GoalTuner::generateHeaders(std::string indent) {
+std::string GoalTuner::generateGoalTuner(std::string indent) {
   auto ss = std::stringstream();
   auto dind = indent + "  ";
   auto trind = dind + "  ";

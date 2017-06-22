@@ -44,7 +44,7 @@ std::vector<std::string> StateTuner::generatePointcuts(std::string indent) {
   return pointcuts;
 }
 
-std::string StateTuner::generateHeaders(std::string indent) {
+std::string StateTuner::generateStateTuner(std::string indent) {
   auto ss = std::stringstream();
   auto dind = indent + "  ";
   auto trind = dind + "  ";
