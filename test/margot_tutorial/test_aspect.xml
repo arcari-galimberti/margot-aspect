@@ -2,9 +2,8 @@
 <!DOCTYPE aspect [
 <!ELEMENT aspect (monitor*, goal-tuner*, state-tuner*)>
 <!ATTLIST aspect block_name CDATA #REQUIRED>
-
 <!-- monitor -->
-<!ELEMENT monitor (function-name, return-type, argument*, configure-call*)>
+<!ELEMENT function-monitor (function-name, return-type, argument*, configure-call*)>
 <!ELEMENT function-name (#PCDATA)>
 <!ELEMENT return-type (#PCDATA)>
 <!ELEMENT argument (type, name)>
@@ -33,7 +32,7 @@
 ]>
 
 <aspect block_name="foo">
-	<monitor>
+	<function-monitor>
 		<function-name>do_work</function-name>
 		<return-type>void</return-type>
 		<argument sw-knob="yes">
@@ -44,12 +43,12 @@
 			<type>int</type>
 			<name>knob</name>
 		</argument>
-		<argument sw-knob="no">
+		<argument sw-knob="no">		
 			<type>int</type>
 			<name>print</name>
-		</argument>		
+		</argument>
 		<configure-call>mock_configure()</configure-call>
-	</monitor>
+	</function-monitor>
 	<goal-tuner>
 		<control-var>
 			<type>int</type>
