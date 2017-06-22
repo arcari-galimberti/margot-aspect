@@ -26,6 +26,10 @@
 
 <!-- state-tuner -->
 <!ELEMENT state-tuner (control-var, rule+)>
+
+<!-- region-monitor -->
+<!ELEMENT region-monitor (knob-name+, configure-call*)>
+<!ELEMENT knob-name (#PCDATA)>
 ]>
 
 <aspect block_name="foo">
@@ -92,4 +96,11 @@
 			<value>my_optimization_two</value>
 		</rule>
 	</state-tuner>
+</aspect>
+<aspect block_name="bar">
+	<region-monitor>
+		<knob-name>region_knob_one</knob-name>
+		<knob-name>region_knob_two</knob-name>
+		<configure-call>mock_configure()</configure-call>
+	</region-monitor>
 </aspect>
