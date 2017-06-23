@@ -61,6 +61,34 @@ AspectParser::parseFunctionMonitor() const {
   return generatorsMap;
 }
 
+std::map<std::string, std::vector<AspectParser::RMPtr>>
+AspectParser::parseRegionMonitor() const {
+  auto generatorsMap =
+      std::map<std::string, std::vector<AspectParser::RMPtr>>();
+  for (auto aspectNode : _aspect.children("aspect")) {
+    auto generators = std::vector<AspectParser::RMPtr>();
+    auto blockNameValue = aspectNode.attribute("block_name").value();
+    auto blockName = std::string(blockNameValue);
+    for (auto monitor : aspectNode.children("region-monitor")) {
+      auto knobs = std::vector<std::string>();
+      for (auto knob : monitor.children("knob-name")) {
+        knobs.push_back(knob.as_string());
+      }
+      auto configureCall =
+          std::string(monitor.child("configure-call").text().as_string());
+      if (configureCall.empty()) {
+        generators.push_back(std::make_unique<RegionMonitor>(
+            std::move(knobs), blockName));
+      } else {
+        generators.push_back(std::make_unique<RegionMonitor>(
+            std::move(knobs), configureCall, blockName));
+      }
+    }
+    generatorsMap[blockName] = std::move(generators);
+  }
+  return generatorsMap;
+}
+
 AspectParser::AspectParser(const AspectParser &oap)
     : _pathname(oap._pathname), _aspect() {
   auto result = _aspect.load_file(_pathname.c_str());
