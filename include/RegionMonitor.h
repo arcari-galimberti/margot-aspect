@@ -11,7 +11,9 @@ namespace ag {
 class RegionMonitor : public MonitorGenerator {
 public:
   RegionMonitor(std::vector<std::string> knobNames,
-                const std::string &configureCall, const std::string& blockName);
+                const std::string &configureCall, const std::string &blockName);
+  RegionMonitor(std::vector<std::string> knobNames,
+                const std::string &blockName);
 
   std::vector<std::string> generateAdvices(std::string indent) override;
   std::vector<std::string> generatePointcuts(std::string indent) override;
@@ -22,6 +24,6 @@ private:
   std::string _configureCall;
   std::string _blockName;
 };
-}
-  
+} // namespace ag
+
 #endif // ASPECT_PROJECT_REGIONMONITOR_H
