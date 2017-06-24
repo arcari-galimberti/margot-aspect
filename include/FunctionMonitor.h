@@ -5,9 +5,9 @@
 #ifndef ASPECT_PROJECT_FUNCTIONMONITOR_H
 #define ASPECT_PROJECT_FUNCTIONMONITOR_H
 
+#include "MonitorGenerator.h"
 #include <string>
 #include <vector>
-#include "MonitorGenerator.h"
 
 namespace ag {
 
@@ -29,15 +29,15 @@ private:
 class FunctionMonitor : public MonitorGenerator {
 public:
   FunctionMonitor(const std::string &functionName,
-                   const std::string &returnType,
-                   const std::vector<Argument> &arguments,
-                   const std::string &configureCall,
-                   const std::string &blockName);
+                  const std::string &returnType,
+                  const std::vector<Argument> &arguments,
+                  const std::string &configureCall,
+                  const std::string &blockName);
 
   FunctionMonitor(const std::string &functionName,
-                   const std::string &returnType,
-                   const std::vector<Argument> &arguments,
-                   const std::string &blockName);
+                  const std::string &returnType,
+                  const std::vector<Argument> &arguments,
+                  const std::string &blockName);
 
   std::vector<std::string> generateAdvices(std::string indent) override;
   std::vector<std::string> generatePointcuts(std::string indent) override;

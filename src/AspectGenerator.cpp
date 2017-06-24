@@ -16,19 +16,21 @@ constexpr char AspectGenerator::generatedIntro[];
 
 AspectGenerator::AspectGenerator(const std::string &xmlPath,
                                  const std::string &outputPath)
-    : _xmlPathname(xmlPath), _outputPathname(outputPath), _parser(xmlPath) {}
+    : _xmlPathname(xmlPath), _outputPathname(outputPath), _parser(xmlPath),
+      _genedAspect(), _genedAspectHeaders(), _genedRoiHeaders() {}
 
 AspectGenerator::AspectGenerator(const AspectGenerator &oag)
     : _xmlPathname(oag._xmlPathname), _parser(oag._parser),
-      _outputPathname(oag._outputPathname), _generatedAspect(),
-      _generatedHeaders() {}
+      _outputPathname(oag._outputPathname), _genedAspect(),
+      _genedAspectHeaders(), _genedRoiHeaders() {}
 
 void AspectGenerator::outputPathname(const std::string &outputPath) {
   AspectGenerator::_outputPathname = outputPath;
 }
 
 const std::string &AspectGenerator::generateAspect() {
-  auto monMap = _parser.parseFunctionMonitor();
+  auto funMonMap = _parser.parseFunctionMonitor();
+  auto regMonMap = _parser.parseRegionMonitor();
   auto gtMap = _parser.parseGoalTuner();
   auto stMap = _parser.parseStateTuner();
 
@@ -41,8 +43,8 @@ const std::string &AspectGenerator::generateAspect() {
 
   // Emit code for header
   generatedAspect << generatedIntro << "\n\n"
-                                       "#ifndef GENERATED_MARGOT_ASPECT_AH\n"
-                                       "#define GENERATED_MARGOT_ASPECT_AH\n\n"
+                                       "#ifndef GENERATED_MARGOTASPECT_AH\n"
+                                       "#define GENERATED_MARGOTASPECT_AH\n\n"
                                        "#include \"margotAspect.h\"\n"
                                        "#include <margot.hpp>\n";
 
@@ -53,7 +55,14 @@ const std::string &AspectGenerator::generateAspect() {
 
   auto blockNames = std::vector<std::string>();
 
-  for (auto &kv : monMap) {
+  for (auto &kv : funMonMap) {
+    if (std::find(blockNames.begin(), blockNames.end(), kv.first) ==
+        blockNames.end()) {
+      blockNames.push_back(kv.first);
+    }
+  }
+
+  for (auto &kv : regMonMap) {
     if (std::find(blockNames.begin(), blockNames.end(), kv.first) ==
         blockNames.end()) {
       blockNames.push_back(kv.first);
@@ -78,15 +87,27 @@ const std::string &AspectGenerator::generateAspect() {
 
   // Emit aspect code for each block name
   for (auto &bn : blockNames) {
-    generatedAspect << "\naspect " << bn << "Aspect {\n";
+    generatedAspect << "\naspect " << bn << "Aspect {";
 
-    // Emit code for MonitorGenerators
-    if (monMap.count(bn)) {
-      for (auto &mg : monMap[bn]) {
-        for (auto &pointcut : mg->generatePointcuts(ind)) {
+    // Emit code for FunctionMonitors
+    if (funMonMap.count(bn)) {
+      for (auto &fm : funMonMap[bn]) {
+        for (auto &pointcut : fm->generatePointcuts(ind)) {
           generatedAspect << "\n" << pointcut;
         }
-        for (auto &advice : mg->generateAdvices(ind)) {
+        for (auto &advice : fm->generateAdvices(ind)) {
+          generatedAspect << "\n" << advice << '\n';
+        }
+      }
+    }
+
+    // Emit code for RegionMonitors
+    if (regMonMap.count(bn)) {
+      for (auto &rm : regMonMap[bn]) {
+        for (auto &pointcut : rm->generatePointcuts(ind)) {
+          generatedAspect << "\n" << pointcut;
+        }
+        for (auto &advice : rm->generateAdvices(ind)) {
           generatedAspect << "\n" << advice << '\n';
         }
       }
@@ -121,40 +142,11 @@ const std::string &AspectGenerator::generateAspect() {
   // Emit trailing code
   generatedAspect << "\n#endif";
 
-  _generatedAspect = generatedAspect.str();
-  return _generatedAspect;
+  _genedAspect = generatedAspect.str();
+  return _genedAspect;
 }
 
-void AspectGenerator::writeAspect() const {
-  using ios = std::ios_base;
-
-  auto of = std::fstream(_outputPathname, ios::trunc | ios::out);
-  if (!of.is_open()) {
-    throw std::ios_base::failure("Failed to open " + _outputPathname);
-  }
-
-  of << _generatedAspect;
-  if (!of) {
-    throw std::ios_base::failure("Failed to write " + _outputPathname);
-  }
-}
-
-void AspectGenerator::writeHeaders() const {
-  using ios = std::ios_base;
-  auto hPathname = std::string("margotAspect.h");
-
-  auto of = std::fstream(hPathname, ios::trunc | ios::out);
-  if (!of.is_open()) {
-    throw std::ios_base::failure("Failed to open " + hPathname);
-  }
-
-  of << _generatedHeaders;
-  if (!of) {
-    throw std::ios_base::failure("Failed to write " + hPathname);
-  }
-}
-
-const std::string &AspectGenerator::generateHeaders() {
+const std::string &AspectGenerator::generateAspectHeaders() {
   auto goalTuners = _parser.parseGoalTuner();
   auto stateTuners = _parser.parseStateTuner();
 
@@ -162,8 +154,8 @@ const std::string &AspectGenerator::generateHeaders() {
 
   // Emit leading code
   gh << generatedIntro << "\n\n"
-                          "#ifndef GENERATED_MARGOT_ASPECT_HEADERS_H\n"
-                          "#define GENERATED_MARGOT_ASPECT_HEADERS_H\n\n"
+                          "#ifndef GENERATED_MARGOTASPECT_ASPECT_HEADERS_H\n"
+                          "#define GENERATED_MARGOTASPECT_ASPECT_HEADERS_H\n\n"
                           "#include <margot.hpp>\n\n";
 
   // Emit code for goal tuners
@@ -182,9 +174,76 @@ const std::string &AspectGenerator::generateHeaders() {
 
   // Emit trailing code
   gh << "#endif";
-  _generatedHeaders = gh.str();
+  _genedAspectHeaders = gh.str();
 
-  return _generatedHeaders;
+  return _genedAspectHeaders;
+}
+
+const std::string &AspectGenerator::generateRoiHeaders() {
+  auto regionMonitors = _parser.parseRegionMonitor();
+  auto ss = std::ostringstream();
+
+  // Emit leading code
+  ss << generatedIntro << "\n\n"
+                          "#ifndef GENERATED_MARGOTASPECT_ROI_HEADERS_H\n"
+                          "#define GENERATED_MARGOTASPECT_ROI_HEADERS_H\n\n";
+
+  // Emit code for ROI markers
+  for (auto &kv : regionMonitors) {
+    for (auto &rm : kv.second) {
+      ss << rm->generateHeaders("") << "\n\n";
+    }
+  }
+
+  // Emit trailing code
+  ss << "#endif";
+
+  _genedRoiHeaders = ss.str();
+  return _genedRoiHeaders;
+}
+
+void AspectGenerator::writeAspect() const {
+  using ios = std::ios_base;
+
+  auto of = std::fstream(_outputPathname, ios::trunc | ios::out);
+  if (!of.is_open()) {
+    throw std::ios_base::failure("Failed to open " + _outputPathname);
+  }
+
+  of << _genedAspect;
+  if (!of) {
+    throw std::ios_base::failure("Failed to write " + _outputPathname);
+  }
+}
+
+void AspectGenerator::writeAspectHeaders() const {
+  using ios = std::ios_base;
+  auto hPathname = std::string("margotAspect.h");
+
+  auto of = std::fstream(hPathname, ios::trunc | ios::out);
+  if (!of.is_open()) {
+    throw std::ios_base::failure("Failed to open " + hPathname);
+  }
+
+  of << _genedAspectHeaders;
+  if (!of) {
+    throw std::ios_base::failure("Failed to write " + hPathname);
+  }
+}
+
+void AspectGenerator::writeRoiHeaders() const {
+  using ios = std::ios_base;
+  auto hPathname = std::string("roiHeaders.h");
+
+  auto of = std::fstream(hPathname, ios::trunc | ios::out);
+  if (!of.is_open()) {
+    throw std::ios_base::failure("Failed to open " + hPathname);
+  }
+
+  of << _genedRoiHeaders;
+  if (!of) {
+    throw std::ios_base::failure("Failed to write " + hPathname);
+  }
 }
 
 void generateAspect(const std::string &xmlPathname,
@@ -196,9 +255,14 @@ void generateAspect(const std::string &xmlPathname,
     ag.writeAspect();
   }
 
-  auto genHead = ag.generateHeaders();
-  if (!genHead.empty()) {
-    ag.writeHeaders();
+  auto genAspHead = ag.generateAspectHeaders();
+  if (!genAspHead.empty()) {
+    ag.writeAspectHeaders();
+  }
+
+  auto genRoiHead = ag.generateRoiHeaders();
+  if (!genRoiHead.empty()) {
+    ag.writeRoiHeaders();
   }
 }
 }

@@ -13,18 +13,18 @@ Argument::Argument(const std::string &type, const std::string &name,
     : _type(type), _name(name), _swKnob(swKnob) {}
 
 ag::FunctionMonitor::FunctionMonitor(const std::string &functionName,
-                                       const std::string &returnType,
-                                       const std::vector<Argument> &arguments,
-                                       const std::string &configureCall,
-                                       const std::string &blockName)
+                                     const std::string &returnType,
+                                     const std::vector<Argument> &arguments,
+                                     const std::string &configureCall,
+                                     const std::string &blockName)
     : _functionName(functionName), _returnType(returnType),
       _arguments(arguments), _configureCall(configureCall),
       _blockName(blockName) {}
 
 ag::FunctionMonitor::FunctionMonitor(const std::string &functionName,
-                                       const std::string &returnType,
-                                       const std::vector<Argument> &arguments,
-                                       const std::string &blockName)
+                                     const std::string &returnType,
+                                     const std::vector<Argument> &arguments,
+                                     const std::string &blockName)
     : _functionName(functionName), _returnType(returnType),
       _arguments(arguments), _configureCall(""), _blockName(blockName) {}
 

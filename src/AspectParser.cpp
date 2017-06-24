@@ -22,7 +22,7 @@ std::map<std::string, std::vector<AspectParser::FMGPtr>>
 AspectParser::parseFunctionMonitor() const {
   auto generatorsMap =
       std::map<std::string, std::vector<AspectParser::FMGPtr>>();
-  for (auto aspectNode : _aspect.children("aspect")) {
+  for (auto aspectNode : _aspect.child("margot").children("aspect")) {
     auto generators = std::vector<AspectParser::FMGPtr>();
     auto blockNameValue = aspectNode.attribute("block_name").value();
     auto blockName = std::string(blockNameValue);
@@ -60,7 +60,7 @@ std::map<std::string, std::vector<AspectParser::RMPtr>>
 AspectParser::parseRegionMonitor() const {
   auto generatorsMap =
       std::map<std::string, std::vector<AspectParser::RMPtr>>();
-  for (auto aspectNode : _aspect.children("aspect")) {
+  for (auto aspectNode : _aspect.child("margot").children("aspect")) {
     auto generators = std::vector<AspectParser::RMPtr>();
     auto blockNameValue = aspectNode.attribute("block_name").value();
     auto blockName = std::string(blockNameValue);
@@ -72,8 +72,8 @@ AspectParser::parseRegionMonitor() const {
       auto configureCall =
           std::string(monitor.child("configure-call").text().as_string());
       if (configureCall.empty()) {
-        generators.push_back(std::make_unique<RegionMonitor>(
-            std::move(knobs), blockName));
+        generators.push_back(
+            std::make_unique<RegionMonitor>(std::move(knobs), blockName));
       } else {
         generators.push_back(std::make_unique<RegionMonitor>(
             std::move(knobs), configureCall, blockName));
@@ -217,7 +217,7 @@ std::map<std::string, std::vector<AspectParser::GTPtr>>
 AspectParser::parseGoalTuner() const {
   auto generatorsMap =
       std::map<std::string, std::vector<AspectParser::GTPtr>>();
-  for (auto aspectNode : _aspect.children("aspect")) {
+  for (auto aspectNode : _aspect.child("margot").children("aspect")) {
     auto generators = std::vector<AspectParser::GTPtr>();
     auto blockNameValue = aspectNode.attribute("block_name").value();
     auto blockName = std::string(blockNameValue);
@@ -243,7 +243,7 @@ std::map<std::string, std::vector<AspectParser::STPtr>>
 AspectParser::parseStateTuner() const {
   auto generatorsMap =
       std::map<std::string, std::vector<AspectParser::STPtr>>();
-  for (auto aspectNode : _aspect.children("aspect")) {
+  for (auto aspectNode : _aspect.child("margot").children("aspect")) {
     auto generators = std::vector<AspectParser::STPtr>();
     auto blockNameValue = aspectNode.attribute("block_name").value();
     auto blockName = std::string(blockNameValue);

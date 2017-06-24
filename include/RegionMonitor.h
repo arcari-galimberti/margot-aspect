@@ -17,7 +17,7 @@ public:
 
   std::vector<std::string> generateAdvices(std::string indent) override;
   std::vector<std::string> generatePointcuts(std::string indent) override;
-  std::vector<std::string> generateHeaders(std::string indent);
+  std::string generateHeaders(std::string indent);
 
 private:
   std::vector<std::string> _knobNames;
