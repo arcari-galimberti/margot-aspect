@@ -15,6 +15,10 @@ void do_work(int trials, int some_knob, int value) {
   std::cout << "Output: " << value << "\n";
 }
 
+void do_work_bar(int var_one, int var_two) {
+  std::this_thread::sleep_for(std::chrono::milliseconds(var_one * var_two));
+}
+
 void mock_configure() { std::cout << "** Called function **\n"; }
 
 int main() {
@@ -47,12 +51,12 @@ int main() {
   int region_knob_two = 10;
   int inner_loop_size = 8;
   int outer_loop_size = 15;
-  std::cout << "*** Region of interest test ***\n";
+  std::cout << "\n*** Region of interest test ***\n";
   for (int i = 0; i < outer_loop_size; ++i) {
     margot_bar_start_roi();
-    for (int j = 0; i < inner_loop_size; ++j) {
-      do_work(region_knob_one, region_knob_two, 0);
-      margot_bar_end_roi();
+    for (int j = 0; j < inner_loop_size; ++j) {
+      do_work_bar(region_knob_one, region_knob_two);
     }
+    margot_bar_end_roi();
   }
 }
