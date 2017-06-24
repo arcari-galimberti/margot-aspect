@@ -1,3 +1,4 @@
+#include "roiHeaders.h"
 #include <chrono>
 #include <iostream>
 #include <margot.hpp>
@@ -17,10 +18,12 @@ void do_work(int trials, int some_knob, int value) {
 void mock_configure() { std::cout << "** Called function **\n"; }
 
 int main() {
+  // single function test
   int trials = 100;
   int knob = 2;
   int repetitions = 30;
   int print = 0;
+  std::cout << "*** Single function test ***\n";
   for (int i = 0; i < repetitions; ++i) {
     std::cout << "\nExecution #" << i + 1 << "\n";
     if (i % change_goal_cycle == 0) {
@@ -38,5 +41,18 @@ int main() {
     }
     print = print + i;
     do_work(trials, knob, print);
+  }
+  // region of interest test
+  int region_knob_one = 10;
+  int region_knob_two = 10;
+  int inner_loop_size = 8;
+  int outer_loop_size = 15;
+  std::cout << "*** Region of interest test ***\n";
+  for (int i = 0; i < outer_loop_size; ++i) {
+    margot_bar_start_roi();
+    for (int j = 0; i < inner_loop_size; ++j) {
+      do_work(region_knob_one, region_knob_two, 0);
+      margot_bar_end_roi();
+    }
   }
 }
