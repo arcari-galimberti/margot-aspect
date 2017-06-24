@@ -46,9 +46,7 @@ ag::RegionMonitor::generateAdvices(std::string indent) {
   ss.str("");
 
   // After advice
-  ss << indent << "advice " << _blockName << "_end_roi() : before() {\n"
-     << dind << "if (margot::" << _blockName << "::update(" << knobList
-     << ")) {\n";
+  ss << indent << "advice " << _blockName << "_end_roi() : before() {\n";
   ss << dind << "margot::" << _blockName << "::stop_monitor();\n";
   ss << dind << "margot::" << _blockName << "::log();\n";
   ss << indent << "}";
