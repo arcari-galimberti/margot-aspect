@@ -35,12 +35,7 @@ AspectParser::parseFunctionMonitor() const {
         auto name = argument.child("name").text();
         auto knobValue = argument.attribute("sw-knob").value();
         auto knobString = std::string(knobValue);
-        bool knob;
-        if (knobString == "yes") {
-          knob = true;
-        } else if (knobString == "no") {
-          knob = false;
-        }
+        auto knob = (knobString == "yes");
         arguments.push_back(
             Argument(argType.as_string(), name.as_string(), knob));
       }
@@ -72,7 +67,7 @@ AspectParser::parseRegionMonitor() const {
     for (auto monitor : aspectNode.children("region-monitor")) {
       auto knobs = std::vector<std::string>();
       for (auto knob : monitor.children("knob-name")) {
-        knobs.push_back(knob.as_string());
+        knobs.push_back(knob.text().as_string());
       }
       auto configureCall =
           std::string(monitor.child("configure-call").text().as_string());
