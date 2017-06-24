@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
-<!DOCTYPE aspect [
-<!ELEMENT aspect (monitor*, goal-tuner*, state-tuner*)>
+<!DOCTYPE margot [
+<!ELEMENT margot (aspect*)>
+<!ELEMENT aspect (function-monitor*, region-monitor*, goal-tuner*, state-tuner*)>
 <!ATTLIST aspect block_name CDATA #REQUIRED>
-<!-- monitor -->
-<!ELEMENT function-monitor (function-name, return-type, argument*, configure-call*)>
+
+<!-- function-monitor -->
+<!ELEMENT function-monitor (function-name, return-type, argument*, configure-call)>
 <!ELEMENT function-name (#PCDATA)>
 <!ELEMENT return-type (#PCDATA)>
 <!ELEMENT argument (type, name)>
@@ -11,6 +13,10 @@
 <!ELEMENT type (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT configure-call (#PCDATA)>
+
+<!-- region-monitor -->
+<!ELEMENT region-monitor (knob-name+, configure-call)>
+<!ELEMENT knob-name (#PCDATA)>
 
 <!-- goal-tuner -->
 <!ELEMENT goal-tuner (control-var, goal-name, rule+)>
@@ -25,81 +31,79 @@
 
 <!-- state-tuner -->
 <!ELEMENT state-tuner (control-var, rule+)>
-
-<!-- region-monitor -->
-<!ELEMENT region-monitor (knob-name+, configure-call*)>
-<!ELEMENT knob-name (#PCDATA)>
 ]>
 
-<aspect block_name="foo">
-	<function-monitor>
-		<function-name>do_work</function-name>
-		<return-type>void</return-type>
-		<argument sw-knob="yes">
-			<type>int</type>
-			<name>trials</name>
-		</argument>
-		<argument sw-knob="yes">
-			<type>int</type>
-			<name>knob</name>
-		</argument>
-		<argument sw-knob="no">		
-			<type>int</type>
-			<name>print</name>
-		</argument>
-		<configure-call>mock_configure()</configure-call>
-	</function-monitor>
-	<goal-tuner>
-		<control-var>
-			<type>int</type>
-			<name>goal_condition</name>
-		</control-var>
-		<goal-name>my_execution_time_goal</goal-name>
-		<rule>
-			<predicate type="eq">1</predicate>
-			<value>80000</value>
-		</rule>
-		<rule>
-			<predicate type="eq">2</predicate>
-			<value>200000</value>
-		</rule>
-		<rule>
-			<predicate type="eq">3</predicate>
-			<value>50000</value>
-		</rule>
-		<rule>
-			<or>
-				<and>
-					<predicate type="gt">3</predicate>
-					<predicate type="lt">6</predicate>
-				</and>
-				<and>
-					<predicate type="gte">7</predicate>
-					<predicate type="lte">8</predicate>
-				</and>
-			</or>
-			<value>300000</value>
-		</rule>
-	</goal-tuner>
-	<state-tuner>
-		<control-var>
-			<type>bool</type>
-			<name>state_condition</name>
-		</control-var>
-		<rule>
-			<predicate type="eq">true</predicate>
-			<value>my_optimization</value>
-		</rule>
-		<rule>
-			<predicate type="eq">false</predicate>
-			<value>my_optimization_two</value>
-		</rule>
-	</state-tuner>
-</aspect>
-<aspect block_name="bar">
-	<region-monitor>
-		<knob-name>region_knob_one</knob-name>
-		<knob-name>region_knob_two</knob-name>
-		<configure-call>mock_configure()</configure-call>
-	</region-monitor>
-</aspect>
+<margot>
+	<aspect block_name="foo">
+		<function-monitor>
+			<function-name>do_work</function-name>
+			<return-type>void</return-type>
+			<argument sw-knob="yes">
+				<type>int</type>
+				<name>trials</name>
+			</argument>
+			<argument sw-knob="yes">
+				<type>int</type>
+				<name>knob</name>
+			</argument>
+			<argument sw-knob="no">
+				<type>int</type>
+				<name>print</name>
+			</argument>
+			<configure-call>mock_configure()</configure-call>
+		</function-monitor>
+		<goal-tuner>
+			<control-var>
+				<type>int</type>
+				<name>goal_condition</name>
+			</control-var>
+			<goal-name>my_execution_time_goal</goal-name>
+			<rule>
+				<predicate type="eq">1</predicate>
+				<value>80000</value>
+			</rule>
+			<rule>
+				<predicate type="eq">2</predicate>
+				<value>200000</value>
+			</rule>
+			<rule>
+				<predicate type="eq">3</predicate>
+				<value>50000</value>
+			</rule>
+			<rule>
+				<or>
+					<and>
+						<predicate type="gt">3</predicate>
+						<predicate type="lt">6</predicate>
+					</and>
+					<and>
+						<predicate type="gte">7</predicate>
+						<predicate type="lte">8</predicate>
+					</and>
+				</or>
+				<value>300000</value>
+			</rule>
+		</goal-tuner>
+		<state-tuner>
+			<control-var>
+				<type>bool</type>
+				<name>state_condition</name>
+			</control-var>
+			<rule>
+				<predicate type="eq">true</predicate>
+				<value>my_optimization</value>
+			</rule>
+			<rule>
+				<predicate type="eq">false</predicate>
+				<value>my_optimization_two</value>
+			</rule>
+		</state-tuner>
+	</aspect>
+	<aspect block_name="bar">
+		<region-monitor>
+			<knob-name>region_knob_one</knob-name>
+			<knob-name>region_knob_two</knob-name>
+			<configure-call>mock_configure()</configure-call>
+		</region-monitor>
+	</aspect>
+</margot>
