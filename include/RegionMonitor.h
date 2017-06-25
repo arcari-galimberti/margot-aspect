@@ -6,13 +6,14 @@
 #define ASPECT_PROJECT_REGIONMONITOR_H
 
 #include "MonitorGenerator.h"
+#include "TunerElements.h"
 
 namespace ag {
 class RegionMonitor : public MonitorGenerator {
 public:
-  RegionMonitor(std::vector<std::string> knobNames,
+  RegionMonitor(std::vector<Argument> knobs,
                 const std::string &configureCall, const std::string &blockName);
-  RegionMonitor(std::vector<std::string> knobNames,
+  RegionMonitor(std::vector<Argument> knobs,
                 const std::string &blockName);
 
   std::vector<std::string> generateAdvices(std::string indent) override;
@@ -20,7 +21,7 @@ public:
   std::string generateHeaders(std::string indent);
 
 private:
-  std::vector<std::string> _knobNames;
+  std::vector<Argument> _knobs;
   std::string _configureCall;
   std::string _blockName;
 };

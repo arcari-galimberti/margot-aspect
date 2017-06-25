@@ -15,8 +15,7 @@
 <!ELEMENT configure-call (#PCDATA)>
 
 <!-- region-monitor -->
-<!ELEMENT region-monitor (knob-name+, configure-call)>
-<!ELEMENT knob-name (#PCDATA)>
+<!ELEMENT region-monitor (argument+, configure-call)>
 
 <!-- goal-tuner -->
 <!ELEMENT goal-tuner (control-var, goal-name, rule+)>
@@ -101,8 +100,14 @@
 	</aspect>
 	<aspect block_name="bar">
 		<region-monitor>
-			<knob-name>region_knob_one</knob-name>
-			<knob-name>region_knob_two</knob-name>
+			<argument sw-knob="yes">
+				<type>int</type>
+				<name>region_knob_one</name>
+			</argument>
+			<argument sw-knob="yes">
+				<type>int</type>
+				<name>region_knob_two</name>
+			</argument>
 			<configure-call>mock_configure()</configure-call>
 		</region-monitor>
 	</aspect>

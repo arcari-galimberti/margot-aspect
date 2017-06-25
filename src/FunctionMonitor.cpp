@@ -7,11 +7,6 @@
 #include <sstream>
 
 namespace ag {
-
-Argument::Argument(const std::string &type, const std::string &name,
-                   const bool &swKnob)
-    : _type(type), _name(name), _swKnob(swKnob) {}
-
 ag::FunctionMonitor::FunctionMonitor(const std::string &functionName,
                                      const std::string &returnType,
                                      const std::vector<Argument> &arguments,

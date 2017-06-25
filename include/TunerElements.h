@@ -83,6 +83,21 @@ private:
   std::string _type;
   std::string _name;
 };
+
+class Argument {
+public:
+  Argument(const std::string &type, const std::string &name, const bool &swKnob)
+      : _type(type), _name(name), _swKnob(swKnob){};
+
+  const inline std::string &type() const { return _type; }
+  const inline std::string &name() const { return _name; }
+  inline bool swKnob() const { return _swKnob; }
+
+private:
+  std::string _type;
+  std::string _name;
+  bool _swKnob;
+};
 }
 
 #endif // ASPECT_PROJECT_TUNERELEMENTS_H

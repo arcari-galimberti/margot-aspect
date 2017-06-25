@@ -7,31 +7,35 @@
 
 namespace ag {
 
-ag::RegionMonitor::RegionMonitor(std::vector<std::string> knobNames,
+ag::RegionMonitor::RegionMonitor(std::vector<Argument> knobs,
                                  const std::string &configureCall,
                                  const std::string &blockName)
-    : _knobNames(knobNames), _configureCall(configureCall),
-      _blockName(blockName) {}
+    : _knobs(knobs), _configureCall(configureCall), _blockName(blockName) {}
 
-ag::RegionMonitor::RegionMonitor(std::vector<std::string> knobNames,
+ag::RegionMonitor::RegionMonitor(std::vector<Argument> knobs,
                                  const std::string &blockName)
-    : _knobNames(knobNames), _configureCall(""), _blockName(blockName) {}
+    : _knobs(knobs), _configureCall(""), _blockName(blockName) {}
 
 std::vector<std::string>
 ag::RegionMonitor::generateAdvices(std::string indent) {
   auto advices = std::vector<std::string>();
   auto ss = std::stringstream();
+  auto ktSs = std::stringstream();
   auto dind = indent + "  ";
   auto trind = dind + "  ";
 
-  for (auto i = 0; i < _knobNames.size(); ++i) {
-    ss << _knobNames[i] << ((i != _knobNames.size() - 1) ? ", " : "");
+  for (auto i = 0; i < _knobs.size(); ++i) {
+    ss << _knobs[i].name() << ((i != _knobs.size() - 1) ? ", " : "");
+    ktSs << _knobs[i].type() << " " << _knobs[i].name()
+         << ((i != _knobs.size() - 1) ? ", " : "");
   }
+  auto typeKnobList = ktSs.str();
   auto knobList = ss.str();
   ss.str("");
 
   // Before advice
-  ss << indent << "advice " << _blockName << "_start_roi() : before() {\n"
+  ss << indent << "advice " << _blockName << "_start_roi(" << knobList
+     << ") : before(" << typeKnobList << ") {\n"
      << dind << "if (margot::" << _blockName << "::update(" << knobList
      << ")) {\n";
   if (!_configureCall.empty()) {
@@ -57,17 +61,35 @@ ag::RegionMonitor::generateAdvices(std::string indent) {
 
 std::vector<std::string>
 ag::RegionMonitor::generatePointcuts(std::string indent) {
-  return {indent + "pointcut " + _blockName +
-              "_start_roi() = execution(\"void margot_" + _blockName +
-              "_start_roi()\");",
+  auto ss = std::stringstream();
+  auto ktSs = std::stringstream();
+
+  for (auto i = 0; i < _knobs.size(); ++i) {
+    ss << _knobs[i].name() << ((i != _knobs.size() - 1) ? ", " : "");
+    ktSs << _knobs[i].type() << " " << _knobs[i].name()
+         << ((i != _knobs.size() - 1) ? ", " : "");
+  }
+  auto typeKnobList = ktSs.str();
+  auto knobList = ss.str();
+
+  return {indent + "pointcut " + _blockName + "_start_roi(" + typeKnobList +
+              ") = execution(\"void margot_" + _blockName +
+              "_start_roi()\") && args(" + knobList + ");",
           indent + "pointcut " + _blockName +
               "_end_roi() = execution(\"void margot_" + _blockName +
               "_end_roi()\");"};
 }
 
 std::string ag::RegionMonitor::generateHeaders(std::string indent) {
-  return indent + "void margot_" + _blockName + "_start_roi() { }\n" + indent +
-         "void margot_" + _blockName + "_end_roi() { }";
+  auto ktSs = std::stringstream();
+  for (auto i = 0; i < _knobs.size(); ++i) {
+    ktSs << _knobs[i].type() << " " << _knobs[i].name()
+         << ((i != _knobs.size() - 1) ? ", " : "");
+  }
+  auto typeKnobList = ktSs.str();
+
+  return indent + "void margot_" + _blockName + "_start_roi(" + typeKnobList +
+         ") { }\n" + indent + "void margot_" + _blockName + "_end_roi() { }";
 }
 
 } // namespace ag

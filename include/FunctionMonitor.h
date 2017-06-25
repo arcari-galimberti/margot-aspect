@@ -6,25 +6,11 @@
 #define ASPECT_PROJECT_FUNCTIONMONITOR_H
 
 #include "MonitorGenerator.h"
+#include "TunerElements.h"
 #include <string>
 #include <vector>
 
 namespace ag {
-
-class Argument {
-public:
-  Argument(const std::string &type, const std::string &name,
-           const bool &swKnob);
-
-  const inline std::string &type() const { return _type; }
-  const inline std::string &name() const { return _name; }
-  inline bool swKnob() const { return _swKnob; }
-
-private:
-  std::string _type;
-  std::string _name;
-  bool _swKnob;
-};
 
 class FunctionMonitor : public MonitorGenerator {
 public:

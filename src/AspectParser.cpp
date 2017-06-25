@@ -65,9 +65,11 @@ AspectParser::parseRegionMonitor() const {
     auto blockNameValue = aspectNode.attribute("block_name").value();
     auto blockName = std::string(blockNameValue);
     for (auto monitor : aspectNode.children("region-monitor")) {
-      auto knobs = std::vector<std::string>();
-      for (auto knob : monitor.children("knob-name")) {
-        knobs.push_back(knob.text().as_string());
+      auto knobs = std::vector<Argument>();
+      for (auto knob : monitor.children("argument")) {
+        auto type = std::string(knob.child("type").text().as_string());
+        auto name = std::string(knob.child("name").text().as_string());
+        knobs.emplace_back(type, name, true);
       }
       auto configureCall =
           std::string(monitor.child("configure-call").text().as_string());
