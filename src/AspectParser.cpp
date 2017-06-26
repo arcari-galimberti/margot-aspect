@@ -104,6 +104,8 @@ static auto parseSimplePredicate(const pugi::xml_node &predicate) {
   PredicateType predType;
   if (predTypeString == "eq") {
     predType = PredicateType::EQ;
+  } else if (predTypeString == "neq") {
+    predType = PredicateType::NEQ;
   } else if (predTypeString == "gt") {
     predType = PredicateType::GT;
   } else if (predTypeString == "lt") {
@@ -130,8 +132,17 @@ static auto parseRule(const pugi::xml_node &rule) {
     return Rule(goalValue.as_string(), std::move(pred));
   } else {
     auto parentNode = pugi::xml_node();
-    auto predNode =
-        ((rule.child("and")) ? rule.child("and") : rule.child("or"));
+    auto predNode = pugi::xml_node();
+    if (rule.child("and"))
+      predNode = rule.child("and");
+    else if (rule.child("or"))
+      predNode = rule.child("or");
+    else if (rule.child("not"))
+      predNode = rule.child("not");
+    else
+      throw std::invalid_argument{
+          "Invalid Predicate type. Expected [and|or|not]. Found none."};
+
     auto topLevelContext = std::make_tuple(std::string(predNode.name()),
                                            std::unique_ptr<Predicate>(nullptr),
                                            std::unique_ptr<Predicate>(nullptr));
@@ -154,20 +165,35 @@ static auto parseRule(const pugi::xml_node &rule) {
       // Check if SimplePredicate
       if (!std::get<1>(cxt) && lhcType == "predicate") {
         std::get<1>(cxt) = parseSimplePredicate(predNode.first_child());
+        nodeAssigned = true;
       }
       if (!std::get<2>(cxt) && rhcType == "predicate") {
         std::get<2>(cxt) = parseSimplePredicate(predNode.last_child());
+        nodeAssigned = true;
       }
 
-      // Handle left hand tree node
-      if (!std::get<1>(cxt) && !ret) {
+      // Check if NotPredicate
+      if (std::get<0>(cxt) == "not" && !std::get<1>(cxt) && !ret) {
         parentNode = predNode;
         predNode = predNode.first_child();
         cxtStack.push(std::move(cxt));
         cxtStack.push({lhcType, nullptr, nullptr});
         continue;
       }
-      if (!std::get<1>(cxt) && ret) {
+      if (std::get<0>(cxt) == "not" && !std::get<1>(cxt) && ret) {
+        std::get<1>(cxt) = std::move(ret);
+        nodeAssigned = true;
+      }
+
+      // Handle left hand tree node
+      if (std::get<0>(cxt) != "not" && !std::get<1>(cxt) && !ret) {
+        parentNode = predNode;
+        predNode = predNode.first_child();
+        cxtStack.push(std::move(cxt));
+        cxtStack.push({lhcType, nullptr, nullptr});
+        continue;
+      }
+      if (std::get<0>(cxt) != "not" && !std::get<1>(cxt) && ret) {
         std::get<1>(cxt) = std::move(ret);
         nodeAssigned = true;
       }
@@ -176,19 +202,22 @@ static auto parseRule(const pugi::xml_node &rule) {
       // Here we force the resolution of left hand side first, asking that
       // left hand side has the Predicate object fully built before diving
       // the right hand tree side
-      if (!std::get<2>(cxt) && std::get<1>(cxt) && nodeAssigned) {
+      if (std::get<0>(cxt) != "not" && !std::get<2>(cxt) && std::get<1>(cxt) &&
+          nodeAssigned) {
         parentNode = predNode;
         predNode = predNode.last_child();
         cxtStack.push(std::move(cxt));
         cxtStack.push({rhcType, nullptr, nullptr});
         continue;
       }
-      if (!std::get<2>(cxt) && ret && std::get<1>(cxt) && !nodeAssigned) {
+      if (std::get<0>(cxt) != "not" && !std::get<2>(cxt) && ret &&
+          std::get<1>(cxt) && !nodeAssigned) {
         std::get<2>(cxt) = std::move(ret);
       }
 
       // Predicate fully constructed. No more recusion from here.
-      if (std::get<1>(cxt) && std::get<2>(cxt)) {
+      if ((std::get<0>(cxt) == "not" && std::get<1>(cxt)) ||
+          (std::get<0>(cxt) != "not" && std::get<1>(cxt) && std::get<2>(cxt))) {
         if (std::get<0>(cxt) == "and") {
           predNode = parentNode;
           parentNode = parentNode.parent();
@@ -199,9 +228,14 @@ static auto parseRule(const pugi::xml_node &rule) {
           parentNode = parentNode.parent();
           retStack.push(std::make_unique<OrPredicate>(
               std::move(std::get<1>(cxt)), std::move(std::get<2>(cxt))));
+        } else if (std::get<0>(cxt) == "not") {
+          predNode = parentNode;
+          parentNode = parentNode.parent();
+          retStack.push(
+              std::make_unique<NotPredicate>(std::move(std::get<1>(cxt))));
         } else {
           throw std::invalid_argument{
-              "Invalid Predicate type. Expected [and|or]. Found " +
+              "Invalid Predicate type. Expected [and|or|not]. Found " +
               std::get<0>(cxt)};
         }
       }

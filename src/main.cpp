@@ -7,7 +7,7 @@ namespace po = boost::program_options;
 
 std::tuple<po::variables_map, po::options_description>
 buildParser(int argc, char **argv) {
-  auto run_desc = "Generate AspectC++ aspects for Margot Framework";
+  auto run_desc = "Generate AspectC++ code for Margot Framework";
   auto run = po::options_description(run_desc);
 
   auto generateDesc = "Aspect description XML file";

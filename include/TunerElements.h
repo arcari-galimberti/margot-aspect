@@ -10,7 +10,7 @@
 
 namespace ag {
 
-enum class PredicateType { EQ, GT, LT, GTE, LTE };
+enum class PredicateType { EQ, NEQ, GT, LT, GTE, LTE };
 
 struct Predicate {
 public:
@@ -54,6 +54,18 @@ struct OrPredicate : public Predicate {
 private:
   std::unique_ptr<Predicate> _lhp;
   std::unique_ptr<Predicate> _rhp;
+};
+
+struct NotPredicate : public Predicate {
+public:
+  NotPredicate(std::unique_ptr<Predicate> pred);
+  NotPredicate(NotPredicate &&other);
+
+  std::string generateCondition(const std::string &controlVar) const override;
+  std::unique_ptr<Predicate> clone() const override;
+
+private:
+  std::unique_ptr<Predicate> _pred;
 };
 
 struct Rule {

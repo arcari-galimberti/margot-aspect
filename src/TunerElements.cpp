@@ -11,6 +11,8 @@ SimplePredicate::generateCondition(const std::string &controlVar) const {
 
   if (_type == PredicateType::EQ)
     condition += " == ";
+  else if (_type == PredicateType::NEQ)
+    condition += " != ";
   else if (_type == PredicateType::GT)
     condition += " > ";
   else if (_type == PredicateType::LT)
@@ -92,4 +94,17 @@ OrPredicate::OrPredicate(std::unique_ptr<Predicate> lhp,
 
 OrPredicate::OrPredicate(OrPredicate &&other)
     : _lhp(std::move(other._lhp)), _rhp(std::move(other._rhp)) {}
+
+NotPredicate::NotPredicate(std::unique_ptr<Predicate> pred)
+    : _pred(std::move(pred)) {}
+NotPredicate::NotPredicate(NotPredicate &&other)
+    : _pred(std::move(other._pred)) {}
+
+std::string
+NotPredicate::generateCondition(const std::string &controlVar) const {
+  return std::string("!(") + _pred->generateCondition(controlVar) + ")";
+}
+std::unique_ptr<Predicate> NotPredicate::clone() const {
+  return std::make_unique<NotPredicate>(_pred->clone());
+}
 }
