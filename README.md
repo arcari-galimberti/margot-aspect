@@ -28,7 +28,7 @@ For information about the mARGOt framework, refer to: https://gitlab.com/margot_
 ## Execution instructions
 
 ~~~
-Usage: ./aspect_project [options]
+Usage: ./margotaspect [options]
 Generate AspectC++ aspects for Margot Framework:
   -g [ --generate ] arg Aspect description XML file
   -o [ --output ] arg   Output (.ah) file
