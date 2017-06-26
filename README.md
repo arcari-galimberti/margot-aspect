@@ -39,5 +39,5 @@ Launch the executable by passing as its parameters the pathname for the XML conf
 and the pathname for the generated aspect file:
 ~~~
 :::bash
-	$ ./aspect_project -g <configuration_file-pathname>.xml -o <output_aspect_file_pathname>.ah
+	$ ./margotaspect -g <configuration_file-pathname>.xml -o <output_aspect_file_pathname>.ah
 ~~~
