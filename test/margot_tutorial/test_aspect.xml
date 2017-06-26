@@ -21,11 +21,12 @@
 <!ELEMENT goal-tuner (control-var, goal-name, rule+)>
 <!ELEMENT control-var (type, name)>
 <!ELEMENT goal-name (#PCDATA)>
-<!ELEMENT rule ((predicate|and|or), value)>
+<!ELEMENT rule ((predicate|and|or|not), value)>
 <!ELEMENT predicate (#PCDATA)>
 <!ATTLIST predicate type CDATA #REQUIRED>
-<!ELEMENT and ((predicate|and|or), (predicate|and|or))>
-<!ELEMENT or ((predicate|and|or), (predicate|and|or))>
+<!ELEMENT and ((predicate|and|or|not), (predicate|and|or|not))>
+<!ELEMENT or ((predicate|and|or|not), (predicate|and|or|not))>
+<!ELEMENT not ((predicate|and|or|not))>
 <!ELEMENT value (#PCDATA)>
 
 <!-- state-tuner -->
@@ -66,7 +67,9 @@
 				<value>200000</value>
 			</rule>
 			<rule>
-				<predicate type="eq">3</predicate>
+				<not>
+					<predicate type="neq">3</predicate>
+				</not>
 				<value>50000</value>
 			</rule>
 			<rule>
