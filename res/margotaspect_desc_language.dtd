@@ -1,0 +1,31 @@
+<!ELEMENT margot (aspect*)>
+        <!ELEMENT aspect (function-monitor*, region-monitor*, goal-tuner*, state-tuner*)>
+        <!ATTLIST aspect block_name CDATA #REQUIRED>
+
+        <!-- function-monitor -->
+        <!ELEMENT function-monitor (function-name, return-type, argument*, configure-call)>
+        <!ELEMENT function-name (#PCDATA)>
+        <!ELEMENT return-type (#PCDATA)>
+        <!ELEMENT argument (type, name)>
+        <!ATTLIST argument sw-knob CDATA #REQUIRED>
+        <!ELEMENT type (#PCDATA)>
+        <!ELEMENT name (#PCDATA)>
+        <!ELEMENT configure-call (#PCDATA)>
+
+        <!-- region-monitor -->
+        <!ELEMENT region-monitor (argument+, configure-call)>
+
+        <!-- goal-tuner -->
+        <!ELEMENT goal-tuner (control-var, goal-name, rule+)>
+        <!ELEMENT control-var (type, name)>
+        <!ELEMENT goal-name (#PCDATA)>
+        <!ELEMENT rule ((predicate|and|or|not), value)>
+        <!ELEMENT predicate (#PCDATA)>
+        <!ATTLIST predicate type CDATA #REQUIRED> <!-- [eq|neq|gt|gte|lt|lte] -->
+        <!ELEMENT and ((predicate|and|or|not), (predicate|and|or|not))>
+        <!ELEMENT or ((predicate|and|or|not), (predicate|and|or|not))>
+        <!ELEMENT not ((predicate|and|or|not))>
+        <!ELEMENT value (#PCDATA)>
+
+        <!-- state-tuner -->
+        <!ELEMENT state-tuner (control-var, rule+)>
