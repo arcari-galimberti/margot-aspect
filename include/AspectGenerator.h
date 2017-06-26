@@ -9,17 +9,73 @@
 #include <string>
 
 namespace ag {
+
+/**
+ * AspectGenerator is the top-level class to generate all the code out of the
+ * MarGotAspect XML description file. This class exposes methods for generating
+ * AspectC++ code, C++ headers for functions invoked within AspectC++ sources
+ * and C++ headers for marking a region of interest within the user functional
+ * code.
+ * All of them are paired to a set of methods to actually write them on file.
+ * <br>
+ * AspectGenerator is copy-constructable.
+ */
 class AspectGenerator {
 public:
+  /**
+   * AspectGenerator constructor.
+   * @param [in] xmlPath pathname of the MarGotAspect XML description file.
+   * @param [in] outputPath pathname of the AspectC++ file to generate.
+   */
   AspectGenerator(const std::string &xmlPath, const std::string &outputPath);
+
+  /**
+   * Copy constructor.
+   * @param [in] oag other AspectGenerator to copy into this.
+   */
   AspectGenerator(const AspectGenerator &oag);
 
+  /**
+   * Output pathname setter.
+   * @param [in] outputPath the new AspectC++ output file pathname.
+   */
   void outputPathname(const std::string &outputPath);
+
+  /**
+   * Generates the AspectC++ code out of the MarGotAspect XML description file.
+   * @return the generated AspectC++ code.
+   */
   const std::string &generateAspect();
+
+  /**
+   * Generates the C++ headers for the AspectC++ sources out of the MarGotAspect
+   * XML description file.
+   * @return the generated C++ headers for the AspectC++ sources.
+   */
   const std::string &generateAspectHeaders();
+
+  /**
+   * Generates the C++ headers for marking a region of interest in the user
+   * functional code out of the MarGotAspect XML description file.
+   * @return the generated C++ headers for marking regions of interest.
+   */
   const std::string &generateRoiHeaders();
+
+  /**
+   * Writes a previously generated AspectC++ code in the output pathname.
+   */
   void writeAspect() const;
+
+  /**
+   * Writes a previously generated C++ code for AspectC++ sources in
+   * <i>margotAspect.h</i>
+   */
   void writeAspectHeaders() const;
+
+  /**
+   * Writes a previously generated C++ code for marking a region of interest in
+   * <i>roiHeaders.h</i>
+   */
   void writeRoiHeaders() const;
 
 private:
@@ -41,6 +97,12 @@ private:
       " */";
 };
 
+/**
+ * Top level routine to parse \p xmlPathname a generate code according to it
+ * exploiting an AspectGenerator object.
+ * @param [in] xmlPath pathname of the MarGotAspect XML description file.
+ * @param [in] outputPath pathname of the AspectC++ file to generate.
+ */
 void generateAspect(const std::string &xmlPathname,
                     const std::string &outputPathname);
 }

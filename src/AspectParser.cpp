@@ -5,6 +5,7 @@
 #include "../include/AspectParser.h"
 #include <iostream>
 #include <stack>
+#include <sstream>
 
 namespace ag {
 
@@ -12,9 +13,11 @@ AspectParser::AspectParser(const std::string &pathname)
     : _pathname(pathname), _aspect() {
   auto result = _aspect.load_file(_pathname.c_str());
   if (!result) {
-    std::cout << "XML " << _pathname
+    auto ss = std::ostringstream();
+    ss << "XML " << _pathname
               << " parsing error\n  Description: " << result.description()
               << '\n';
+    throw std::invalid_argument{ss.str()};
   }
 }
 
@@ -90,9 +93,11 @@ AspectParser::AspectParser(const AspectParser &oap)
     : _pathname(oap._pathname), _aspect() {
   auto result = _aspect.load_file(_pathname.c_str());
   if (!result) {
-    std::cout << "XML " << _pathname
-              << " parsing error\n  Description: " << result.description()
-              << '\n';
+    auto ss = std::ostringstream();
+    ss << "XML " << _pathname
+       << " parsing error\n  Description: " << result.description()
+       << '\n';
+    throw std::invalid_argument{ss.str()};
   }
 }
 
