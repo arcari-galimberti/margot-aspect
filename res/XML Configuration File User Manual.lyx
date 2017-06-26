@@ -1,0 +1,652 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family sfdefault
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\headheight 1cm
+\headsep 1cm
+\footskip 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+MarGotAspect - XML Configuration File User Manual
+\end_layout
+
+\begin_layout Author
+Arcari Leonardo, Galimberti Andrea
+\end_layout
+
+\begin_layout Section
+About
+\end_layout
+
+\begin_layout Standard
+This document is intended to be used as a reference for the elements of
+ the XML configuration file.
+ It describes the use and meaning of each element providing examples.
+ MarGotAspect is intended as a code generator for the mARGOt autotuning
+ framework, therefore it uses concepts and constructs for which to refer
+ to the mARGOt framework documentation.
+\end_layout
+
+\begin_layout Section
+Document Type Definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<!ELEMENT margot (aspect*)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT aspect (function-monitor*, region-monitor*, goal-tuner*, state-tuner*)
+>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ATTLIST aspect block_name CDATA #REQUIRED>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+<!-- function-monitor -->
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT function-monitor (function-name, return-type, argument*, configure-cal
+l)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT function-name (#PCDATA)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT return-type (#PCDATA)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT argument (type, name)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ATTLIST argument sw-knob CDATA #REQUIRED>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT type (#PCDATA)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT name (#PCDATA)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT configure-call (#PCDATA)>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+<!-- region-monitor -->
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT region-monitor (argument+, configure-call)>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+<!-- goal-tuner -->
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT goal-tuner (control-var, goal-name, rule+)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT control-var (type, name)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT goal-name (#PCDATA)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT rule ((predicate|and|or|not), value)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT predicate (#PCDATA)>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ATTLIST predicate type CDATA #REQUIRED>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT and ((predicate|and|or|not), (predicate|and|or|not))>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT or ((predicate|and|or|not), (predicate|and|or|not))>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT not ((predicate|and|or|not))>
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT value (#PCDATA)>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+<!-- state-tuner -->
+\end_layout
+
+\begin_layout Plain Layout
+
+<!ELEMENT state-tuner (control-var, rule+)>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Aspect
+\end_layout
+
+\begin_layout Standard
+The most external element 
+\emph on
+margot
+\emph default
+ can contain multiple 
+\emph on
+aspect
+\emph default
+ elements, each with a block_name attribute corresponding to a block declared
+ in the mARGOt framework configuration files.
+\end_layout
+
+\begin_layout Standard
+Each 
+\emph on
+aspect 
+\emph default
+element can contain any number of function monitors, region monitors, goal
+ tuners and state tuners, and will be mapped to a single aspect (with its
+ related pointcuts and advices) inside the generated aspect file.
+\end_layout
+
+\begin_layout Standard
+It has to be noted that, aside from the XML configuration file contents
+ and the related aspects that will be generated, a 
+\begin_inset Quotes eld
+\end_inset
+
+special
+\begin_inset Quotes erd
+\end_inset
+
+ aspect is always created containing an advice such that a margot::init()
+ call is performed at the start of the main function of the application
+ program.
+\end_layout
+
+\begin_layout Section
+Monitors
+\end_layout
+
+\begin_layout Standard
+Monitors can either be function monitors or region monitors.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+argument
+\emph default
+ elements correspond to variables which can be configured in the mARGOt
+ framework as knobs, or be standard parameters passed to the monitored function;
+ this is specified with the 
+\emph on
+sw-knob
+\emph default
+ attribute of each argument, which can take values 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+yes
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+no
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The optional 
+\emph on
+configure-call
+\emph default
+ subelement corresponds to a function that has to be called whenever the
+ values of the knobs are modified; this function has to be written in the
+ XML document as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function_name(arg1_type arg1_name, arg2_type, arg2_name, ...)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Function Monitor
+\end_layout
+
+\begin_layout Standard
+A function monitor is characterized by the name (
+\emph on
+function-name
+\emph default
+), the return type (return-type
+\emph on
+)
+\emph default
+ and the arguments (
+\emph on
+argument
+\emph default
+) of the function that has to be monitored.
+\end_layout
+
+\begin_layout Standard
+The generated aspect code will then start and stop the monitors for the
+ corresponding knob parameters of the function, as configured in the mARGOt
+ framework configuration files; logging activity for the monitors is also
+ performed.
+\end_layout
+
+\begin_layout Subsection
+Region Monitor
+\end_layout
+
+\begin_layout Standard
+Not only function calls can be monitored, but also well-delimited blocks
+ of code (i.e., the regions of interest); the block delimitation has to be
+ manually performed inside the application code, by applying at the start
+ of the block the function call:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+margot_<block_name>_start_roi(knob1_name, knob2_name, ...)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where all the knobs to monitor are listed as its parameters and <block_name>
+ corresponds to the attribute with the same name for the aspect element,
+ and at the end of the block the function call:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+margot_<block_name>_end_roi()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Tuners
+\end_layout
+
+\begin_layout Standard
+Goal tuners and state tuners corresponds to advice code which allows to
+ change at run-time the goal values or the state of the mARGOt framework,
+ according to some variable (not just a software knob, as already automatically
+ possible for the framework).
+\end_layout
+
+\begin_layout Standard
+Both of them share the concept of rule, which allows associating each particular
+ state or goal value to a logical predicate to be verified at run-time.
+\end_layout
+
+\begin_layout Subsection
+Rule
+\end_layout
+
+\begin_layout Standard
+Rules are a key aspect for both tuners, as they couple together predicates
+ and goal/state values.
+\end_layout
+
+\begin_layout Standard
+Each 
+\emph on
+rule
+\emph default
+ element has indeed an associated 
+\emph on
+value
+\emph default
+ element, which corresponds to a possible value for either a state or a
+ goal, and a predicate element.
+\end_layout
+
+\begin_layout Standard
+Predicates can be either simple predicates (
+\emph on
+predicate
+\emph default
+) or composite predicates (
+\emph on
+and
+\emph default
+, 
+\emph on
+or
+\emph default
+, 
+\emph on
+not
+\emph default
+ elements).
+\end_layout
+
+\begin_layout Standard
+Simple predicates are assigned a predicate value (a numerical value, or
+ a boolean) and they can be of 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+eq
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+neq
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+gt
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+gte
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+lt
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+lte
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+ types, as reported in the corresponding 
+\emph on
+type
+\emph default
+ attribute; the simple predicate will be satisfied when the associate variable,
+ i.e., the 
+\emph on
+control-var
+\emph default
+ element, will have a value such that the 
+\emph on
+<control-var> <predicate-type> <predicate-value>
+\emph default
+ expression is true.
+\end_layout
+
+\begin_layout Standard
+Composite predicates instead use the 
+\emph on
+and
+\emph default
+, 
+\emph on
+or
+\emph default
+ and 
+\emph on
+not
+\emph default
+ elements to compose (both simple and composite) predicates with the correspondi
+ng boolean logic functions.
+\end_layout
+
+\begin_layout Subsection
+Goal Tuner
+\end_layout
+
+\begin_layout Standard
+To each goal tuner, a goal previously defined in the mARGOt configuration
+ files is associated through the 
+\emph on
+goal-name
+\emph default
+ element.
+\end_layout
+
+\begin_layout Standard
+In the context of the goal tuners, the simple predicate element values correspon
+d to possible values of this goal, and the value of the goal is updated
+ to the value of some rule whose predicate is verified.
+\end_layout
+
+\begin_layout Subsection
+State Tuner
+\end_layout
+
+\begin_layout Standard
+In the context of the state tuners, the simple predicate element values
+ correspond to the names of states as defined in the mARGOt configuration
+ files, and the state of the framework is updated to the value of some rule
+ whose predicate is verified.
+\end_layout
+
+\end_body
+\end_document
