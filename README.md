@@ -28,7 +28,7 @@ For information about the mARGOt framework, refer to: https://gitlab.com/margot_
 ## Execution instructions
 
 ~~~
-Usage: ./aspect_project [options]
+Usage: ./margotaspect [options]
 Generate AspectC++ aspects for Margot Framework:
   -g [ --generate ] arg Aspect description XML file
   -o [ --output ] arg   Output (.ah) file
@@ -39,5 +39,5 @@ Launch the executable by passing as its parameters the pathname for the XML conf
 and the pathname for the generated aspect file:
 ~~~
 :::bash
-	$ ./aspect_project -g <configuration_file-pathname>.xml -o <output_aspect_file_pathname>.ah
+	$ ./margotaspect -g <configuration_file-pathname>.xml -o <output_aspect_file_pathname>.ah
 ~~~
