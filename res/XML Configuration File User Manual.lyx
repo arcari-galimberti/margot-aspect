@@ -408,13 +408,17 @@ do_work
 \emph default
 .
  It takes as arguments two parameters, one is a normal parameter, the other
- one is a software knob in the mARGOt framework.
+ one is a software knob in the 
+\series bold
+mARGOt
+\series default
+ framework.
  This is the functional code the user wrote:
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,keywordstyle={\color[rgb]{0,0,1}},commentstyle={\color{gray}\upshape},identifierstyle={\ttfstyle},stringstyle={\color[rgb{0.627,0.126,0.941}}"
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,stringstyle={\color[rgb]{0.627,0.126,0.941}},keywordstyle={\color[rgb]{0,0,1}},identifierstyle={\ttfstyle},commentstyle={\color{gray}\upshape}"
 inline false
 status open
 
@@ -435,7 +439,7 @@ int main() {
 
 \begin_layout Plain Layout
 
-  for (int i = 0; i < REPETITIONS; ++i) {
+  for (int i = 0; i < N; ++i) {
 \end_layout
 
 \begin_layout Plain Layout
@@ -568,7 +572,11 @@ status open
 \end_layout
 
 \begin_layout Standard
-And here is the AspectC++ code that MarGotAspect generates for us.
+And here is the AspectC++ code that 
+\series bold
+MarGotAspect
+\series default
+ generates for us.
  Note that it performs a check on the value of our software knob and then
  starts the monitor before calling 
 \emph on
@@ -737,15 +745,335 @@ margot_<block_name>_end_roi()
 
 \end_layout
 
+\begin_layout Subsubsection
+Example
+\end_layout
+
+\begin_layout Standard
+Let's stay that we want to monitor a region of code.
+ So the user marks it calling the above function pair.
+ Without any loss of generality let us assume that the user code looks like
+ this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,stringstyle={\color[rgb]{0.627,0.126,0.941}},keywordstyle={\color[rgb]{0,0,1}},identifierstyle={\ttfstyle},commentstyle={\color{gray}\upshape}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+int main() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	int knob_one = 10;   
+\end_layout
+
+\begin_layout Plain Layout
+
+	int knob_two = 10;
+\end_layout
+
+\begin_layout Plain Layout
+
+	margot_bar_start_roi(knob_one, knob_two);
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Whatever
+\end_layout
+
+\begin_layout Plain Layout
+
+    for (int j = 0; j < inner_loop_size; ++j) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    // code, like
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+	// anything 
+\end_layout
+
+\begin_layout Plain Layout
+
+    margot_bar_end_roi();
+\end_layout
+
+\begin_layout Plain Layout
+
+} // Functional code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So this time we define a 
+\emph on
+region-monitor
+\emph default
+ block telling 
+\series bold
+MarGotAspect
+\series default
+ that in this 
+\series bold
+mARGOt
+\series default
+ block named 
+\emph on
+foo 
+\emph default
+there are 2 
+\emph on
+software knobs.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=XML,basicstyle={\ttfamily},breaklines=true,tabsize=2,basicstyle={\ttfamily},columns=fullflexible,showstringspaces=false,frame=single,morestring={[s]{&quot;}{&quot;}},morecomment={[s]{?}{?}},morecomment={[s]{!--}{--}},commentstyle={\color{darkgreen}},moredelim={[s][\color{black}]{>}{<}},moredelim={[s][\color{red}]{\ }{=}},stringstyle={\color{blue}},identifierstyle={\color{maroon}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<margot>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<aspect block_name="bar">
+\end_layout
+
+\begin_layout Plain Layout
+
+		<region-monitor>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<argument sw-knob="yes">
+\end_layout
+
+\begin_layout Plain Layout
+
+				<type>int</type>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<name>knob_one</name>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</argument>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<argument sw-knob="yes">
+\end_layout
+
+\begin_layout Plain Layout
+
+				<type>int</type>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<name>knob_two</name>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</argument>
+\end_layout
+
+\begin_layout Plain Layout
+
+		</region-monitor>
+\end_layout
+
+\begin_layout Plain Layout
+
+	</aspect>
+\end_layout
+
+\begin_layout Plain Layout
+
+</margot>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And here is the AspectC++ code that 
+\series bold
+MarGotAspect
+\series default
+ generates for us.
+ As in 
+\emph on
+function-monitor
+\emph default
+ case it performs a check on the values of our software knobs and then starts
+ the monitor right before our region-of-interest marker function.
+ When it reaches the end of the region-of-interest it stops the monitor
+ and logs the results.
+ 
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,morekeywords={aspect,pointcut,advice,before,after,execution,args,set},columns=fullflexible,frame=single,keywordstyle={\color[rgb]{0,0,1}},commentstyle={\color{gray}\upshape},identifierstyle={\ttfstyle},stringstyle={\color[rgb]{0.627,0.126,0.941}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+aspect barAspect {
+\end_layout
+
+\begin_layout Plain Layout
+
+	pointcut bar_start_roi(int knob_one, int knob_two) = execution("void margot_bar
+_start_roi()") && args(knob_one, knob_two);
+\end_layout
+
+\begin_layout Plain Layout
+
+	pointcut bar_end_roi() = execution("void margot_bar_end_roi()");
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	advice bar_start_roi(knob_one, knob_two) : before(int knob_one, int knob_two)
+ {
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (margot::bar::update(knob_one, knob_two)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			margot::bar::manager.configuration_applied();
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::bar::start_monitor();
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	advice bar_end_roi() : before() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::bar::stop_monitor();
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::bar::log();
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this case 
+\series bold
+MarGotAspect
+\series default
+ generates another file, the C++ code defining the two marker functions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,stringstyle={\color[rgb]{0.627,0.126,0.941}},keywordstyle={\color[rgb]{0,0,1}},identifierstyle={\ttfstyle},commentstyle={\color{gray}\upshape}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+// roiHeaders.h
+\end_layout
+
+\begin_layout Plain Layout
+
+void margot_bar_start_roi(int knob_one, int knob_two) { }
+\end_layout
+
+\begin_layout Plain Layout
+
+void margot_bar_end_roi() { }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Tuners
 \end_layout
 
 \begin_layout Standard
 Goal tuners and state tuners corresponds to advice code which allows to
- change at run-time the goal values or the state of the mARGOt framework,
- according to some variable (not just a software knob, as already automatically
- possible for the framework).
+ change at run-time the goal values or the state of the 
+\series bold
+mARGOt
+\series default
+ framework, according to some variable (not just a software knob, as already
+ automatically possible for the framework).
 \end_layout
 
 \begin_layout Standard
@@ -907,8 +1235,11 @@ Goal Tuner
 \end_layout
 
 \begin_layout Standard
-To each goal tuner, a goal previously defined in the mARGOt configuration
- files is associated through the 
+To each goal tuner, a goal previously defined in the 
+\series bold
+mARGOt
+\series default
+ configuration files is associated through the 
 \emph on
 goal-name
 \emph default
@@ -921,15 +1252,875 @@ d to possible values of this goal, and the value of the goal is updated
  to the value of some rule whose predicate is verified.
 \end_layout
 
+\begin_layout Subsubsection
+Example
+\end_layout
+
+\begin_layout Standard
+This time let us say we want to introduce a set of rules according to which
+ we set the 
+\series bold
+mARGOt
+\series default
+ goal in a block named 
+\emph on
+foo
+\emph default
+.
+ These rules should be applied when a control variable in our code is assigned
+ to some values.
+ Let us consider a piece of functional code that performs assignments to
+ the control variable 
+\emph on
+goal_condition
+\emph default
+.
+ Let's assume that we had previously defined in 
+\series bold
+mARGOt
+\series default
+ a goal named 
+\emph on
+my_execution_time_goal
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,stringstyle={\color[rgb]{0.627,0.126,0.941}},keywordstyle={\color[rgb]{0,0,1}},identifierstyle={\ttfstyle},commentstyle={\color{gray}\upshape}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+int goal_condition = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+int main() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Whatever
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (int i = 0; i < N; ++i) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (goal_condition >= 8) goal_condition = 1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+		else goal_condition = goal_condition + 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+	// code
+\end_layout
+
+\begin_layout Plain Layout
+
+} // Functional code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To accomplish our requirements we define a 
+\emph on
+goal-tuner
+\emph default
+ block telling 
+\series bold
+MarGotAspect
+\series default
+ that the control variable is named 
+\emph on
+goal_condition 
+\emph default
+and of type 
+\emph on
+int
+\emph default
+.
+ Then we explicit our set of rules.
+ Let us assume that in case 
+\emph on
+goal_condition = 1 
+\emph default
+we want our goal set to 
+\emph on
+80000
+\emph default
+.
+ Again in case 
+\emph on
+3 < goal_condition < 6 or 7 <= goal_condition <= 8 
+\emph default
+we want our goal set to 
+\emph on
+300000.
+
+\emph default
+ We can describe all of this in the XML file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=XML,basicstyle={\ttfamily},breaklines=true,tabsize=2,basicstyle={\ttfamily},columns=fullflexible,showstringspaces=false,frame=single,morestring={[s]{&quot;}{&quot;}},morecomment={[s]{?}{?}},morecomment={[s]{!--}{--}},commentstyle={\color{darkgreen}},moredelim={[s][\color{black}]{>}{<}},moredelim={[s][\color{red}]{\ }{=}},stringstyle={\color{blue}},identifierstyle={\color{maroon}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<margot>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<aspect block_name="foo">
+\end_layout
+
+\begin_layout Plain Layout
+
+		<goal-tuner>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<control-var>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<type>int</type>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<name>goal_condition</name>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</control-var>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<goal-name>my_execution_time_goal</goal-name>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<predicate type="eq">1</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<value>80000</value>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<predicate type="eq">2</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<value>200000</value>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<not>
+\end_layout
+
+\begin_layout Plain Layout
+
+					<predicate type="neq">3</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+				</not>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<value>50000</value>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<or>
+\end_layout
+
+\begin_layout Plain Layout
+
+					<and>
+\end_layout
+
+\begin_layout Plain Layout
+
+						<predicate type="gt">3</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+						<predicate type="lt">6</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+					</and>
+\end_layout
+
+\begin_layout Plain Layout
+
+					<and>
+\end_layout
+
+\begin_layout Plain Layout
+
+						<predicate type="gte">7</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+						<predicate type="lte">8</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+					</and>
+\end_layout
+
+\begin_layout Plain Layout
+
+				</or>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<value>300000</value>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+		</goal-tuner>
+\end_layout
+
+\begin_layout Plain Layout
+
+	</aspect>
+\end_layout
+
+\begin_layout Plain Layout
+
+</margot>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And here is the AspectC++ code that 
+\series bold
+MarGotAspect
+\series default
+ generates for us.
+ Quite short this time.
+ In this case we execute a function named 
+\emph on
+tune_my_execution_time_goal 
+\emph default
+passing the new value of 
+\emph on
+goal_condition
+\emph default
+ as argument.
+ 
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,morekeywords={aspect,pointcut,advice,before,after,execution,args,set},columns=fullflexible,frame=single,keywordstyle={\color[rgb]{0,0,1}},commentstyle={\color{gray}\upshape},identifierstyle={\ttfstyle},stringstyle={\color[rgb]{0.627,0.126,0.941}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+aspect fooAspect {
+\end_layout
+
+\begin_layout Plain Layout
+
+	pointcut goal_condition_set() = set("int ...::goal_condition");
+\end_layout
+
+\begin_layout Plain Layout
+
+	advice goal_condition_set() : after () {
+\end_layout
+
+\begin_layout Plain Layout
+
+		tune_my_execution_time_goal(*tjp->entity());
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+tune_my_execution_time_goal 
+\emph default
+is a function generated as well by 
+\series bold
+MarGotAspect
+\series default
+ that implements the check on the new value of 
+\emph on
+goal_condition
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,stringstyle={\color[rgb]{0.627,0.126,0.941}},keywordstyle={\color[rgb]{0,0,1}},identifierstyle={\ttfstyle},commentstyle={\color{gray}\upshape}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+// margotAspect.h
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <margot.hpp>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void tune_my_execution_time_goal(int goal_condition) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (goal_condition == 1) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::goal::my_execution_time_goal.set(80000);
+\end_layout
+
+\begin_layout Plain Layout
+
+	} else if (goal_condition == 2) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::goal::my_execution_time_goal.set(200000);
+\end_layout
+
+\begin_layout Plain Layout
+
+	} else if (!(goal_condition != 3)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::goal::my_execution_time_goal.set(50000);
+\end_layout
+
+\begin_layout Plain Layout
+
+	} else if (((goal_condition > 3 && goal_condition < 6) || (goal_condition
+ >= 7 && goal_condition <= 8))) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::goal::my_execution_time_goal.set(300000);
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 State Tuner
 \end_layout
 
 \begin_layout Standard
 In the context of the state tuners, the simple predicate element values
- correspond to the names of states as defined in the mARGOt configuration
- files, and the state of the framework is updated to the value of some rule
- whose predicate is verified.
+ correspond to the names of states as defined in the 
+\series bold
+mARGOt
+\series default
+ configuration files, and the state of the framework is updated to the value
+ of some rule whose predicate is verified.
+\end_layout
+
+\begin_layout Subsubsection
+Example
+\end_layout
+
+\begin_layout Standard
+This case is similar to the previous one.
+ We still need a set of rules according to which we set the 
+\series bold
+mARGOt
+\series default
+ 
+\series bold
+state
+\series default
+ in a block named 
+\emph on
+foo
+\emph default
+.
+ These rules should be applied when a control variable in our code is assigned
+ to some values.
+ Let us consider a piece of functional code that performs assignments to
+ the control variable 
+\emph on
+state_condition
+\emph default
+.
+ Let's assume that we had previously defined in 
+\series bold
+mARGOt
+\series default
+ two states named 
+\emph on
+my_optimization
+\emph default
+ and 
+\emph on
+my_optimization_two
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,stringstyle={\color[rgb]{0.627,0.126,0.941}},keywordstyle={\color[rgb]{0,0,1}},identifierstyle={\ttfstyle},commentstyle={\color{gray}\upshape}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+bool state_condition = true;
+\end_layout
+
+\begin_layout Plain Layout
+
+int main() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	// Whatever
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (int i = 0; i < N; ++i) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (i % 2 == 0) state_condition = false; 
+\end_layout
+
+\begin_layout Plain Layout
+
+		else state_condition = true;
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+	// code
+\end_layout
+
+\begin_layout Plain Layout
+
+} // Functional code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To accomplish our requirements we define a 
+\emph on
+state-tuner
+\emph default
+ block telling 
+\series bold
+MarGotAspect
+\series default
+ that the control variable is named 
+\emph on
+state_condition 
+\emph default
+and of type bool.
+ Then we explicit our set of rules.
+ This time we case the boolean value of 
+\emph on
+state_condition
+\emph default
+.
+ If it's 
+\emph on
+true
+\emph default
+ we want 
+\emph on
+my_optimization
+\emph default
+ set as 
+\series bold
+state
+\series default
+ otherwise we want 
+\emph on
+my_optimization_two.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=XML,basicstyle={\ttfamily},breaklines=true,tabsize=2,basicstyle={\ttfamily},columns=fullflexible,showstringspaces=false,frame=single,morestring={[s]{&quot;}{&quot;}},morecomment={[s]{?}{?}},morecomment={[s]{!--}{--}},commentstyle={\color{darkgreen}},moredelim={[s][\color{black}]{>}{<}},moredelim={[s][\color{red}]{\ }{=}},stringstyle={\color{blue}},identifierstyle={\color{maroon}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<margot>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<aspect block_name="foo">
+\end_layout
+
+\begin_layout Plain Layout
+
+		<state-tuner>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<control-var>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<type>bool</type>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<name>state_condition</name>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</control-var>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<predicate type="eq">true</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<value>my_optimization</value>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+			<rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<predicate type="eq">false</predicate>
+\end_layout
+
+\begin_layout Plain Layout
+
+				<value>my_optimization_two</value>
+\end_layout
+
+\begin_layout Plain Layout
+
+			</rule>
+\end_layout
+
+\begin_layout Plain Layout
+
+		</state-tuner>
+\end_layout
+
+\begin_layout Plain Layout
+
+	</aspect>
+\end_layout
+
+\begin_layout Plain Layout
+
+</margot>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The AspectC++ code that 
+\series bold
+MarGotAspect
+\series default
+ generates for us is basically the same of 
+\emph on
+goal-tuner
+\emph default
+.
+ In this case we execute a function named 
+\emph on
+tune_foo_state 
+\emph default
+passing the new value of 
+\emph on
+state_condition
+\emph default
+ as argument.
+ 
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,morekeywords={aspect,pointcut,advice,before,after,execution,args,set},columns=fullflexible,frame=single,keywordstyle={\color[rgb]{0,0,1}},commentstyle={\color{gray}\upshape},identifierstyle={\ttfstyle},stringstyle={\color[rgb]{0.627,0.126,0.941}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+aspect fooAspect {
+\end_layout
+
+\begin_layout Plain Layout
+
+	pointcut state_condition_set() = set("bool ...::state_condition");
+\end_layout
+
+\begin_layout Plain Layout
+
+	advice state_condition_set() : after () {
+\end_layout
+
+\begin_layout Plain Layout
+
+		tune_foo_state(*tjp->entity());
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+tune_foo_state 
+\emph default
+is a function generated as well by 
+\series bold
+MarGotAspect
+\series default
+ that implements the check on the new value of 
+\emph on
+state_condition
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,stringstyle={\color[rgb]{0.627,0.126,0.941}},keywordstyle={\color[rgb]{0,0,1}},identifierstyle={\ttfstyle},commentstyle={\color{gray}\upshape}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+// margotAspect.h
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <margot.hpp>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void tune_foo_state(bool state_condition) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (state_condition == true) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::manager.change_active_state("my_optimization");
+\end_layout
+
+\begin_layout Plain Layout
+
+	} else if (state_condition == false) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::manager.change_active_state("my_optimization_two");
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
