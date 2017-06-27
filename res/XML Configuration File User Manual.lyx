@@ -362,7 +362,7 @@ status open
 
 \begin_layout Plain Layout
 
-function_name(arg1_type arg1_name, arg2_type, arg2_name, ...)
+function_name(arg1_name, arg2_name, ...)
 \end_layout
 
 \end_inset
@@ -434,7 +434,7 @@ int main() {
 
 \begin_layout Plain Layout
 
-  int knob = 2;	 // Sofware knob
+  int knob = 2;	 // Software knob
 \end_layout
 
 \begin_layout Plain Layout
