@@ -5,6 +5,16 @@
 \save_transient_properties true
 \origin unavailable
 \textclass article
+\begin_preamble
+\usepackage{color}
+
+% Define language settings
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+\definecolor{maroon}{rgb}{0.5,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -105,6 +115,7 @@ Document Type Definition
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "language=XML,basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single"
 inline false
 status open
 
@@ -126,11 +137,6 @@ status open
 
 \begin_layout Plain Layout
 
-\end_layout
-
-\begin_layout Plain Layout
-
-<!-- function-monitor -->
 \end_layout
 
 \begin_layout Plain Layout
@@ -180,21 +186,11 @@ l)>
 
 \begin_layout Plain Layout
 
-<!-- region-monitor -->
-\end_layout
-
-\begin_layout Plain Layout
-
 <!ELEMENT region-monitor (argument+, configure-call)>
 \end_layout
 
 \begin_layout Plain Layout
 
-\end_layout
-
-\begin_layout Plain Layout
-
-<!-- goal-tuner -->
 \end_layout
 
 \begin_layout Plain Layout
@@ -249,11 +245,6 @@ l)>
 
 \begin_layout Plain Layout
 
-\end_layout
-
-\begin_layout Plain Layout
-
-<!-- state-tuner -->
 \end_layout
 
 \begin_layout Plain Layout
@@ -404,6 +395,299 @@ The generated aspect code will then start and stop the monitors for the
  corresponding knob parameters of the function, as configured in the mARGOt
  framework configuration files; logging activity for the monitors is also
  performed.
+\end_layout
+
+\begin_layout Subsubsection
+Example
+\end_layout
+
+\begin_layout Standard
+Let's say we want to monitor the execution time of the function 
+\emph on
+do_work
+\emph default
+.
+ It takes as arguments two parameters, one is a normal parameter, the other
+ one is a software knob in the mARGOt framework.
+ This is the functional code the user wrote:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,columns=fullflexible,frame=single,keywordstyle={\color[rgb]{0,0,1}},commentstyle={\color{gray}\upshape},identifierstyle={\ttfstyle},stringstyle={\color[rgb{0.627,0.126,0.941}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+int main() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  int trials = 100; // Normal argument
+\end_layout
+
+\begin_layout Plain Layout
+
+  int knob = 2;	 // Sofware knob
+\end_layout
+
+\begin_layout Plain Layout
+
+  for (int i = 0; i < REPETITIONS; ++i) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    do_work(trials, knob);
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+} // Functional code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we write an XML file describing our intention to monitor a function named
+ 
+\emph on
+do_work
+\emph default
+ taking two parameters, one of which is a 
+\emph on
+software knob
+\emph default
+ in the block named 
+\emph on
+foo
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=XML,basicstyle={\ttfamily},breaklines=true,tabsize=2,basicstyle={\ttfamily},columns=fullflexible,showstringspaces=false,frame=single,morestring={[s]{&quot;}{&quot;}},morecomment={[s]{?}{?}},morecomment={[s]{!--}{--}},commentstyle={\color{darkgreen}},moredelim={[s][\color{black}]{>}{<}},moredelim={[s][\color{red}]{\ }{=}},stringstyle={\color{blue}},identifierstyle={\color{maroon}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<margot>
+\end_layout
+
+\begin_layout Plain Layout
+
+  <aspect block_name="foo">
+\end_layout
+
+\begin_layout Plain Layout
+
+    <function-monitor>
+\end_layout
+
+\begin_layout Plain Layout
+
+      <function-name>do_work</function-name>
+\end_layout
+
+\begin_layout Plain Layout
+
+      <return-type>void</return-type>
+\end_layout
+
+\begin_layout Plain Layout
+
+      <argument sw-knob="no">
+\end_layout
+
+\begin_layout Plain Layout
+
+        <type>int</type>
+\end_layout
+
+\begin_layout Plain Layout
+
+	    <name>trials</name>
+\end_layout
+
+\begin_layout Plain Layout
+
+      </argument>
+\end_layout
+
+\begin_layout Plain Layout
+
+      <argument sw-knob="yes">
+\end_layout
+
+\begin_layout Plain Layout
+
+        <type>int</type>
+\end_layout
+
+\begin_layout Plain Layout
+
+	    <name>knob</name>
+\end_layout
+
+\begin_layout Plain Layout
+
+      </argument>
+\end_layout
+
+\begin_layout Plain Layout
+
+    </function-monitor>
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+  </aspect>
+\end_layout
+
+\begin_layout Plain Layout
+
+</margot>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And here is the AspectC++ code that MarGotAspect generates for us.
+ Note that it performs a check on the value of our software knob and then
+ starts the monitor before calling 
+\emph on
+do_work()
+\emph default
+.
+ Lastly, after 
+\emph on
+do_work()
+\emph default
+ returned, it stops the monitor and logs the results.
+\begin_inset listings
+lstparams "language={C++},basicstyle={\ttfamily},breaklines=true,showstringspaces=false,tabsize=2,morekeywords={aspect,pointcut,advice,before,after,execution,args,set},columns=fullflexible,frame=single,keywordstyle={\color[rgb]{0,0,1}},commentstyle={\color{gray}\upshape},identifierstyle={\ttfstyle},stringstyle={\color[rgb]{0.627,0.126,0.941}}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+aspect GeneralAspect {
+\end_layout
+
+\begin_layout Plain Layout
+
+	pointcut main_exec() = execution("int main(...)");
+\end_layout
+
+\begin_layout Plain Layout
+
+	advice main_exec() : before() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::init();
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\begin_layout Plain Layout
+
+aspect fooAspect {
+\end_layout
+
+\begin_layout Plain Layout
+
+	pointcut do_work_exec(int trials, int knob) = execution("void do_work(...)")
+ && args(knob);
+\end_layout
+
+\begin_layout Plain Layout
+
+	advice do_work_exec(trials, knob) : before(int knob) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (margot::foo::update(knob)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			margot::foo::manager.configuration_applied();
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::start_monitor();
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	advice do_work_exec(knob) : after(int knob) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::stop_monitor();
+\end_layout
+
+\begin_layout Plain Layout
+
+		margot::foo::log();
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
