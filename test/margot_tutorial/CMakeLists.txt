@@ -13,7 +13,9 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif(NOT CMAKE_BUILD_TYPE)
 
-set (AGXX_FLAGS "-p /home/andrea/margot_second/tutorial/src --keep_woven --data_joinpoints --builtin_operators")
+set(HOME_DIR ".." CACHE STRING "Project home directory")
+
+set (AGXX_FLAGS "-p ${HOME_DIR}/src --keep_woven --data_joinpoints --builtin_operators --include ${HOME_DIR}/src/roiHeaders.h")
 
 # setting common c++ flags
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${AGXX_FLAGS} --Xcompiler -std=c++0x -static-libgcc -Wl,--hash-style=both,--as-needed -pthread -fopenmp -ftemplate-depth=1100" )
